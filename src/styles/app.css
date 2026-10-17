@@ -4358,3 +4358,20 @@ h2 {
     transform: scale(0.8);
   }
 }
+
+/* التعبيرات: العلامة والعدد بعدها لا ينفصلان */
+.expr-pair {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35em;
+  white-space: nowrap;
+}
+@media (max-width: 620px) {
+  .expr-lg {
+    font-size: 1.15rem;
+  }
+  .expr,
+  .expr-pair {
+    gap: 0.25em;
+  }
+}

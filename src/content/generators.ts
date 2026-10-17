@@ -66,8 +66,16 @@ function housesDigits(rng: Rng): number {
   return randInt(rng, Math.min(settings.houses.minPlaces, placesCount()), placesCount());
 }
 
+/**
+ * الصورة التحليلية تُرسم والآحاد في أقصى اليمين كما في كتاب الطالبة:
+ * التعبير يُعرض من اليمين إلى اليسار، فنرتّب الأجزاء من الأصغر إلى الأكبر.
+ */
+function onesFirst(parts: number[]): number[] {
+  return [...parts].sort((a, b) => a - b);
+}
+
 function expandedTokens(n: number): Token[] {
-  return joinWith(expandedParts(n), '+');
+  return joinWith(onesFirst(expandedParts(n)), '+');
 }
 
 function describePlaces(n: number): string {
@@ -271,7 +279,7 @@ function pvForms(rng: Rng): Question {
       candidates,
       Math.min(4, candidates.length + 1),
       (arr) => arr.join('+'),
-      (arr) => ({ label: arr.map((x) => fmt(x)).join(' + '), tokens: joinWith(arr, '+') }),
+      (arr) => ({ label: onesFirst(arr).map((x) => fmt(x)).join(' + '), tokens: joinWith(onesFirst(arr), '+') }),
     );
     return {
       ...base,
@@ -284,11 +292,14 @@ function pvForms(rng: Rng): Question {
     };
   }
   // جزء مفقود في الصورة التحليلية
-  const missing = randInt(rng, 1, parts.length - 1);
+  const shown = onesFirst(parts);
+  // لا نُخفي أكبر جزء (آخر جزء يسارًا)
+  const missingPart = shown[randInt(rng, 0, shown.length - 2)];
+  const missing = parts.indexOf(missingPart);
   const tokens: Token[] = [num(n), op('=')];
-  parts.forEach((p, k) => {
+  shown.forEach((p, k) => {
     if (k > 0) tokens.push(op('+'));
-    tokens.push(k === missing ? blank : num(p));
+    tokens.push(p === missingPart ? blank : num(p));
   });
   return {
     ...base,

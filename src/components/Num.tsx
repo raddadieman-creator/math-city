@@ -21,28 +21,46 @@ export function Expr({ tokens, blankContent, size = 'md' }: { tokens: Token[]; b
   const spoken = tokens
     .map((t) => (t.t === 'num' ? fmt(t.v) : t.t === 'op' ? OP_LABEL[t.v] : t.t === 'blank' ? 'فراغ' : t.v))
     .join(' ');
+  const render = (t: Token, i: number) => {
+    if (t.t === 'num') return <Num key={i} v={t.v} className="expr-num" />;
+    if (t.t === 'op')
+      return (
+        <span key={i} className="expr-op" aria-hidden="true">
+          {t.v}
+        </span>
+      );
+    if (t.t === 'blank')
+      return (
+        <span key={i} className="expr-blank">
+          {blankContent ?? '؟'}
+        </span>
+      );
+    return (
+      <span key={i} className="expr-text">
+        {t.v}
+      </span>
+    );
+  };
+  // نربط كل علامة بالرمز الذي يليها حتى لا تنفصل عنه عند التفاف السطر
+  const groups: Token[][] = [];
+  tokens.forEach((t, i) => {
+    if (t.t === 'op' && i + 1 < tokens.length) groups.push([t]);
+    else if (groups.length && groups[groups.length - 1].length === 1 && groups[groups.length - 1][0].t === 'op')
+      groups[groups.length - 1].push(t);
+    else groups.push([t]);
+  });
+  let k = 0;
   return (
     <div className={`expr expr-${size}`} dir="rtl" role="math" aria-label={spoken}>
-      {tokens.map((t, i) => {
-        if (t.t === 'num') return <Num key={i} v={t.v} className="expr-num" />;
-        if (t.t === 'op')
-          return (
-            <span key={i} className="expr-op" aria-hidden="true">
-              {t.v}
-            </span>
-          );
-        if (t.t === 'blank')
-          return (
-            <span key={i} className="expr-blank">
-              {blankContent ?? '؟'}
-            </span>
-          );
-        return (
-          <span key={i} className="expr-text">
-            {t.v}
+      {groups.map((g, gi) =>
+        g.length === 1 ? (
+          render(g[0], k++)
+        ) : (
+          <span key={`g${gi}`} className="expr-pair">
+            {g.map((t) => render(t, k++))}
           </span>
-        );
-      })}
+        ),
+      )}
     </div>
   );
 }

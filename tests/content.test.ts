@@ -278,7 +278,7 @@ describe('كل المولّدات', () => {
         const n = parseNumberInput(q.prompt.replace(/[^\d٠-٩٬]/g, ''))!;
         expect(evalSide(q.options[q.answer].tokens!)).toBe(n);
         expect(q.options[q.answer].tokens!.filter((t) => t.t === 'num').map((t) => (t as { v: number }).v)).toEqual(
-          expandedParts(n),
+          [...expandedParts(n)].reverse(),
         );
       }
     }
@@ -364,6 +364,31 @@ describe('كل المولّدات', () => {
       const nums = q.options.map((o) => numericLabel(o.label));
       expect(nums).toContain(q.visual.low);
       expect(nums).toContain(q.visual.high);
+    }
+  });
+});
+
+describe('اتجاه الصورة التحليلية', () => {
+  it('الآحاد أول رمز (أقصى اليمين) والأكبر آخر رمز (أقصى اليسار)', () => {
+    const rng = createRng(77);
+    for (let k = 0; k < N; k++) {
+      const q = GENERATORS['pv-forms'](rng);
+      const lists: Token[][] = [];
+      if (q.visual?.type === 'expr') lists.push(q.visual.tokens);
+      if (q.kind === 'choice') q.options.forEach((o) => o.tokens && lists.push(o.tokens));
+      if (q.kind === 'number' && q.tokens) {
+        const eq = q.tokens.findIndex((t) => t.t === 'op' && t.v === '=');
+        lists.push(fill(q.tokens.slice(eq + 1), q.answer));
+      }
+      for (const tokens of lists) {
+        const nums = tokens.filter((t) => t.t === 'num').map((t) => (t as { v: number }).v);
+        expect(nums).toEqual([...nums].sort((a, b) => a - b));
+      }
+    }
+    const b = GENERATORS['pv-build'](createRng(5));
+    if (b.visual?.type === 'expr') {
+      const nums = b.visual.tokens.filter((t) => t.t === 'num').map((t) => (t as { v: number }).v);
+      expect(nums).toEqual([...nums].sort((a, c) => a - c));
     }
   });
 });
