@@ -1,5 +1,6 @@
-import { useEffect, useRef, useState, type ReactNode } from 'react';
-import { enabledDistricts, type DistrictId } from '../config/settings';
+import { useEffect, useRef, useState, type ReactNode, type Ref } from 'react';
+import { createPortal } from 'react-dom';
+import { enabledDistricts, branding, type DistrictId } from '../config/settings';
 import { DISTRICTS, SKILL_NAMES } from '../content/districts';
 import type { SkillId } from '../content/types';
 import { isMastered, useProgress, type Progress } from '../state/progress';
@@ -9,6 +10,8 @@ import { sfx } from '../lib/sound';
 import { Num } from '../components/Num';
 import { ProjectInfoForm } from '../components/ProjectInfoForm';
 import { GoldStamp, arabicShortDate } from '../components/GoldStamp';
+import { Emblem } from '../components/Emblem';
+import { ExportBar } from '../components/ExportBar';
 
 export function ConfirmDialog({
   open,
@@ -59,7 +62,7 @@ export const RANKS = [
   { min: 1, title: 'مستكشفة الأحياء', icon: '🧭' },
   { min: 3, title: 'بانية ماهرة', icon: '🧱' },
   { min: 6, title: 'مهندسة المدينة', icon: '📐' },
-  { min: 8, title: 'عمدة مدينة الرياضيات', icon: '👑' },
+  { min: 8, title: `عمدة ${branding.cityName}`, icon: '👑' },
 ];
 
 export function rankFor(stamps: number, total: number) {
@@ -110,33 +113,6 @@ function HolderPortrait() {
       <circle cx="75" cy="75" r="4" fill="#FF9F95" opacity="0.6" />
       <path d="M52 79 Q 60 87 68 79" stroke="#9A4A3E" strokeWidth="3" fill="none" strokeLinecap="round" />
       <path d="M84 36 l2.6 5.4 5.8 .8 -4.2 4 1 5.8 -5.2 -2.8 -5.2 2.8 1 -5.8 -4.2 -4 5.8 -.8 z" fill="#FFC53D" stroke="#2A2B5F" strokeWidth="1.5" />
-    </svg>
-  );
-}
-
-function Emblem({ size = 120 }: { size?: number }) {
-  return (
-    <svg viewBox="0 0 120 120" width={size} height={size} className="pp-emblem" aria-hidden="true">
-      <circle cx="60" cy="60" r="54" fill="none" stroke="currentColor" strokeWidth="3" />
-      <circle cx="60" cy="60" r="46" fill="none" stroke="currentColor" strokeWidth="1.5" strokeDasharray="2 4" />
-      <g fill="none" stroke="currentColor" strokeWidth="3" strokeLinejoin="round">
-        <rect x="26" y="56" width="16" height="28" />
-        <path d="M23 58 L34 46 L45 58" />
-        <rect x="46" y="38" width="16" height="46" />
-        <rect x="66" y="60" width="14" height="24" />
-        <rect x="82" y="50" width="12" height="34" />
-        <line x1="20" y1="84" x2="100" y2="84" />
-      </g>
-      <g fill="currentColor">
-        <rect x="50" y="44" width="3" height="4" />
-        <rect x="55" y="44" width="3" height="4" />
-        <rect x="50" y="54" width="3" height="4" />
-        <rect x="55" y="54" width="3" height="4" />
-        <path d="M60 14 l3 6 6.6 1 -4.8 4.6 1.2 6.6 -6 -3.2 -6 3.2 1.2 -6.6 -4.8 -4.6 6.6 -1 z" />
-      </g>
-      <text x="60" y="102" textAnchor="middle" fontSize="11" fontWeight="700" fill="currentColor">
-        + − × =
-      </text>
     </svg>
   );
 }
@@ -335,6 +311,56 @@ function SkillsPage({ num }: { num: number }) {
   );
 }
 
+/* ---------------- نسخة التحميل والطباعة ---------------- */
+
+function PassportSheet({ innerRef, progress, ids, stamps }: { innerRef: Ref<HTMLDivElement>; progress: Progress; ids: DistrictId[]; stamps: number }) {
+  return (
+    <div ref={innerRef} className="pp-sheet">
+      <header className="pp-sheet-head">
+        <span className="pp-sheet-emblem">
+          <Emblem size={64} />
+        </span>
+        <div>
+          <strong>{branding.passportName}</strong>
+          <span>
+            {progress.info.studentName.trim() || 'بانية المدينة'} — <Num v={stamps} /> / <Num v={ids.length} /> ختم ذهبي
+          </span>
+        </div>
+      </header>
+      <div className="pp-sheet-grid">
+        <IdentityPage progress={progress} stamps={stamps} total={ids.length} />
+        <StampsPage ids={ids} num={2} />
+      </div>
+      <div className="pp-sheet-grid pp-sheet-row2">
+        <GrandPage num={3} progress={progress} stamps={stamps} total={ids.length} />
+        <SkillsPage num={4} />
+      </div>
+    </div>
+  );
+}
+
+function PassportExport({ progress, ids, stamps }: { progress: Progress; ids: DistrictId[]; stamps: number }) {
+  const [stage, setStage] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+  const prepare = () =>
+    new Promise<HTMLElement | null>((resolve) => {
+      setStage(true);
+      requestAnimationFrame(() => requestAnimationFrame(() => resolve(ref.current)));
+    });
+  return (
+    <>
+      <ExportBar prepare={prepare} filename="جواز-المدينة.png" what="الجواز" onDone={() => setStage(false)} />
+      {stage &&
+        createPortal(
+          <div className="export-stage" aria-hidden="true">
+            <PassportSheet innerRef={ref} progress={progress} ids={ids} stamps={stamps} />
+          </div>,
+          document.body,
+        )}
+    </>
+  );
+}
+
 /* ---------------- الشاشة ---------------- */
 
 export function Passport() {
@@ -369,7 +395,7 @@ export function Passport() {
 
   return (
     <main className="page passport-page">
-      <h1 className="sr-only">جواز مدينة الرياضيات</h1>
+      <h1 className="sr-only">{branding.passportName}</h1>
       {!open ? (
         <section className="pp-closed" aria-labelledby="pp-title">
           <button
@@ -382,10 +408,10 @@ export function Passport() {
             aria-label="افتحي الجواز"
           >
             <span className="pp-cover-band" aria-hidden="true" />
-            <span className="pp-cover-top">مدينة الرياضيات</span>
+            <span className="pp-cover-top">{branding.cityName}</span>
             <Emblem size={150} />
             <span id="pp-title" className="pp-cover-title">
-              جواز مدينة الرياضيات
+              {branding.passportName}
             </span>
             <span className="pp-cover-name">{name || 'بانية المدينة'}</span>
             <span className="pp-cover-count">
@@ -396,9 +422,10 @@ export function Passport() {
           <button type="button" className="btn btn-primary btn-xl" onClick={() => setOpen(true)}>
             افتحي الجواز
           </button>
+          <PassportExport progress={progress} ids={ids} stamps={stamps} />
         </section>
       ) : (
-        <section className="pp-book-wrap" aria-label="جواز مدينة الرياضيات">
+        <section className="pp-book-wrap" aria-label={branding.passportName}>
           <div className="pp-book-bar">
             <button type="button" className="btn btn-ghost btn-sm" onClick={() => setOpen(false)}>
               إغلاق الجواز
@@ -435,6 +462,7 @@ export function Passport() {
               <span className="lg-only">الصفحة </span>التالية
             </button>
           </nav>
+          <PassportExport progress={progress} ids={ids} stamps={stamps} />
         </section>
       )}
 

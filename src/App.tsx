@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useHashPath, navigate } from './lib/router';
 import { useProgress } from './state/progress';
-import { settings, type DistrictId } from './config/settings';
+import { settings, branding, type DistrictId } from './config/settings';
 import { DISTRICTS } from './content/districts';
 import { Welcome } from './screens/Welcome';
 import { CityScreen } from './screens/CityScreen';
@@ -19,7 +19,7 @@ function Header({ path }: { path: string }) {
   ];
   return (
     <header className="app-header">
-      <a href="#/city" className="brand" aria-label="مدينة الرياضيات — العودة إلى الخريطة">
+      <a href="#/city" className="brand" aria-label={`${branding.cityName} — العودة إلى الخريطة`}>
         <svg viewBox="0 0 64 64" width="44" height="44" aria-hidden="true" className="brand-logo">
           <rect x="2" y="2" width="60" height="60" rx="16" fill="#3EC5F2" stroke="#2A2B5F" strokeWidth="3" />
           <circle cx="48" cy="17" r="7" fill="#FFE27A" />
@@ -29,7 +29,10 @@ function Header({ path }: { path: string }) {
           <rect x="31" y="21" width="6" height="6" rx="1" fill="#FFF3A6" />
           <rect x="31" y="33" width="6" height="6" rx="1" fill="#FFF3A6" />
         </svg>
-        <span className="brand-text">مدينة الرياضيات</span>
+        <span className="brand-text">
+          <span className="brand-name">{branding.cityName}</span>
+          <span className="brand-kind">{branding.cityKind}</span>
+        </span>
       </a>
       <nav aria-label="التنقل الرئيسي" className="nav">
         {items.map((it) => (
@@ -66,7 +69,7 @@ export default function App() {
 
   useEffect(() => {
     const id = parts[0] === 'd' ? (parts[1] as DistrictId) : null;
-    document.title = id && DISTRICTS[id] ? `${DISTRICTS[id].name} — مدينة الرياضيات` : 'مدينة الرياضيات — ابني مدينتك بذكائك';
+    document.title = id && DISTRICTS[id] ? `${DISTRICTS[id].name} — ${branding.cityName}` : `${branding.cityName} — ${branding.cityKind}`;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [base]);
 

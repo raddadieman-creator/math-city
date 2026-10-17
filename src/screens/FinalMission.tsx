@@ -1,7 +1,8 @@
-import { useMemo, useRef, useState } from 'react';
+import { useMemo, useRef, useState, type Ref } from 'react';
+import { createPortal } from 'react-dom';
 import { buildMission } from '../content/session';
 import { DISTRICTS } from '../content/districts';
-import { enabledDistricts } from '../config/settings';
+import { enabledDistricts, branding } from '../config/settings';
 import { createRng } from '../lib/random';
 import { sfx } from '../lib/sound';
 import { useProgress } from '../state/progress';
@@ -13,6 +14,8 @@ import { navigate } from '../lib/router';
 import { fmt } from '../lib/numbers';
 import { Confetti } from '../components/Confetti';
 import { GoldStamp } from '../components/GoldStamp';
+import { ExportBar } from '../components/ExportBar';
+import { Emblem } from '../components/Emblem';
 
 function formatDates(d: Date) {
   try {
@@ -24,60 +27,93 @@ function formatDates(d: Date) {
   }
 }
 
-export function AchievementCard() {
+export function AchievementCard({ innerRef, fixed = false }: { innerRef?: Ref<HTMLDivElement>; fixed?: boolean }) {
   const { progress, districtProgress } = useProgress();
   const ids = enabledDistricts();
   const stamped = ids.filter((id) => districtProgress(id).stamp);
   const { studentName, grade, school, teacher } = progress.info;
+  const name = studentName.trim() || 'بانية المدينة';
+  const date = formatDates(progress.finalAt ? new Date(progress.finalAt) : new Date());
   return (
-    <div className="print-card" aria-label="بطاقة الإنجاز">
-      <div className="pc-inner">
-        <div className="pc-top">
-          <span className="pc-brand">مدينة الرياضيات</span>
-          <span className="pc-kind">بطاقة إنجاز</span>
-        </div>
-        <ParkScene open />
-        <h2 className="pc-title">افتتاح حديقة المدينة</h2>
-        <p className="pc-text">
-          أتمّت <strong>{studentName.trim() || 'بانية المدينة'}</strong> مهمة «افتتاح حديقة المدينة» في مدينة الرياضيات،
-          واستخدمت الرياضيات لبناء مرافق المدينة وحل مشكلاتها.
+    <div ref={innerRef} className={`ach-card ${fixed ? 'is-fixed' : ''}`} aria-label={branding.cardName}>
+      <div className="ach-frame">
+        {['tr', 'tl', 'br', 'bl'].map((c) => (
+          <span key={c} className={`ach-corner ${c}`} aria-hidden="true" />
+        ))}
+        <header className="ach-head">
+          <span className="ach-brand">
+            <Emblem size={fixed ? 58 : 46} />
+            <span>
+              <span className="ach-city">{branding.cityName}</span>
+              <span className="ach-kind">{branding.cityKind}</span>
+            </span>
+          </span>
+          <span className="ach-date">{date}</span>
+        </header>
+
+        <h2 className="ach-title">{branding.cardName}</h2>
+        <p className="ach-give">تُهدى هذه البطاقة إلى</p>
+        <p className="ach-name">{name}</p>
+        <p className="ach-text">
+          لإتمامها مهمة «افتتاح حديقة المدينة» واستخدامها الترتيب والتقدير والحساب وقراءة البيانات والأنماط لبناء مرافق
+          المدينة.
         </p>
+
         {stamped.length > 0 && (
-          <ul className="pc-stamps">
+          <ul className="ach-stamps" aria-label="الأختام الذهبية">
             {stamped.map((id, k) => (
               <li key={id}>
-                <GoldStamp icon={DISTRICTS[id].icon} name={DISTRICTS[id].name} ribbon={DISTRICTS[id].color} earned size={74} rotate={[-8, 6, -4, 9][k % 4]} />
+                <GoldStamp icon={DISTRICTS[id].icon} name={DISTRICTS[id].name} ribbon={DISTRICTS[id].color} earned size={fixed ? 84 : 70} rotate={[-8, 6, -4, 9][k % 4]} />
               </li>
             ))}
           </ul>
         )}
-        <dl className="pc-meta">
-          {grade.trim() && (
-            <div>
-              <dt>الصف</dt>
-              <dd>{grade}</dd>
-            </div>
-          )}
-          {school.trim() && (
-            <div>
-              <dt>المدرسة</dt>
-              <dd>{school}</dd>
-            </div>
-          )}
-          {teacher.trim() && (
-            <div>
-              <dt>المعلمة</dt>
-              <dd>{teacher}</dd>
-            </div>
-          )}
-          <div>
-            <dt>التاريخ</dt>
-            <dd>{formatDates(new Date())}</dd>
+
+        <footer className="ach-sign">
+          <div className="ach-sig">
+            <span className="ach-sig-name">{name}</span>
+            <span className="ach-sig-role">الطالبة</span>
           </div>
-        </dl>
-        <p className="pc-foot">بطاقة تذكارية من مشروع مدرسي تعليمي.</p>
+          <div className="ach-seal">
+            <GoldStamp icon="⛲" name="حديقة المدينة" ribbon="#34D6A6" earned special size={fixed ? 128 : 104} rotate={-6} />
+          </div>
+          <div className="ach-sig">
+            <span className="ach-sig-name">{teacher.trim() || '—'}</span>
+            <span className="ach-sig-role">المعلمة</span>
+          </div>
+        </footer>
+        {(grade.trim() || school.trim()) && (
+          <p className="ach-school">
+            {grade.trim() && `الصف ${grade.trim()}`}
+            {grade.trim() && school.trim() && ' — '}
+            {school.trim()}
+          </p>
+        )}
+        <p className="ach-foot">بطاقة تذكارية من مشروع مدرسي تعليمي</p>
       </div>
     </div>
+  );
+}
+
+function CardExport() {
+  const [stage, setStage] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+  const prepare = () =>
+    new Promise<HTMLElement | null>((resolve) => {
+      setStage(true);
+      requestAnimationFrame(() => requestAnimationFrame(() => resolve(ref.current)));
+    });
+  return (
+    <>
+      <ExportBar prepare={prepare} filename="بطاقة-الإنجاز.png" what="البطاقة" onDone={() => setStage(false)} />
+      {stage &&
+        createPortal(
+          <div className="export-stage" aria-hidden="true">
+            <AchievementCard innerRef={ref} fixed />
+          </div>,
+          document.body,
+        )}
+    </>
   );
 }
 
@@ -189,10 +225,8 @@ export function FinalMission() {
           </div>
           <Noha mood="cheer">أحسنتِ! استخدمتِ الترتيب والتقدير والحساب وقراءة البيانات والأنماط لافتتاح الحديقة.</Noha>
           <AchievementCard />
+          <CardExport />
           <div className="row-actions wrap no-print">
-            <button type="button" className="btn btn-primary" onClick={() => window.print()}>
-              اطبعي بطاقة الإنجاز
-            </button>
             <button type="button" className="btn btn-ghost" onClick={() => navigate('/city')}>
               العودة إلى المدينة
             </button>

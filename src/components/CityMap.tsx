@@ -1,5 +1,5 @@
 import { useState, type KeyboardEvent, type ReactNode } from 'react';
-import { settings, type DistrictId } from '../config/settings';
+import { settings, branding, type DistrictId } from '../config/settings';
 import { DISTRICTS } from '../content/districts';
 import { useProgress } from '../state/progress';
 import { useMedia, useReducedMotion } from '../lib/router';
@@ -19,40 +19,40 @@ interface Layout {
 
 const WIDE: Layout = {
   w: 1200,
-  h: 800,
+  h: 880,
   sky: 70,
   track: 108,
   scale: 1,
   pos: {
-    houses: [1045, 245],
-    station: [765, 230],
-    garden: [480, 245],
-    market: [190, 260],
-    workshop: [190, 610],
-    stats: [480, 625],
-    walkway: [765, 625],
-    farm: [1045, 610],
+    houses: [1040, 270],
+    station: [747, 270],
+    garden: [453, 270],
+    market: [160, 270],
+    workshop: [160, 700],
+    stats: [453, 700],
+    walkway: [747, 700],
+    farm: [1040, 700],
   },
-  park: [625, 430],
+  park: [600, 478],
 };
 
 const TALL: Layout = {
   w: 520,
-  h: 1540,
+  h: 1620,
   sky: 50,
   track: 82,
   scale: 1,
   pos: {
-    houses: [372, 210],
-    station: [148, 350],
-    garden: [372, 490],
-    market: [148, 630],
-    workshop: [372, 1000],
-    stats: [148, 1140],
-    walkway: [372, 1280],
-    farm: [148, 1420],
+    houses: [384, 240],
+    station: [136, 390],
+    garden: [384, 540],
+    market: [136, 690],
+    workshop: [384, 1080],
+    stats: [136, 1230],
+    walkway: [384, 1380],
+    farm: [136, 1530],
   },
-  park: [260, 810],
+  park: [260, 880],
 };
 
 /* ---------------- رسومات المباني ---------------- */
@@ -412,8 +412,8 @@ export function CityMap({
   const roadPts: Pt[] = [];
   path.forEach((id, i) => {
     const [x, y] = L.pos[id];
-    roadPts.push([x, y + 78]);
-    if (i === 3) roadPts.push([L.park[0], L.park[1] + 80]);
+    roadPts.push([x, y + 4]);
+    if (i === 3) roadPts.push([L.park[0], L.park[1] + 20]);
   });
 
   const choose = (id: DistrictId) => {
@@ -436,7 +436,7 @@ export function CityMap({
       className={`city-map ${preview ? 'is-preview' : ''} ${tall ? 'is-tall' : ''}`}
       viewBox={`0 0 ${L.w} ${L.h}`}
       role={preview ? 'img' : 'group'}
-      aria-label="خريطة مدينة الرياضيات"
+      aria-label={`خريطة ${branding.cityName}`}
     >
       <defs>
         <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
@@ -555,7 +555,6 @@ export function CityMap({
         const dp = districtProgress(id);
         const d = DISTRICTS[id];
         const order = enabled.indexOf(id) + 1;
-        const nameW = d.name.length * (tall ? 17 : 15) + 70;
         return (
           <g
             key={id}
@@ -567,45 +566,61 @@ export function CityMap({
             onClick={() => choose(id)}
             onKeyDown={key(() => choose(id))}
           >
-            <rect className="bldg-focus" x={-108} y={-110} width={216} height={238} rx={24} />
-            <rect className="bldg-hit" x={-100} y={-100} width={200} height={220} rx={20} />
-            <ellipse cx={0} cy={46} rx={92} ry={12} fill="#2A2B5F" opacity={0.12} />
+            <rect className="bldg-focus" x={-124} y={-124} width={248} height={258} rx={34} />
+            {/* منصة المحطة */}
+            <rect x={-112} y={-106} width={224} height={232} rx={30} fill="#2A2B5F" />
+            <rect x={-112} y={-112} width={224} height={232} rx={30} fill="#FFFFFF" />
+            <rect
+              className="lot"
+              x={-112}
+              y={-112}
+              width={224}
+              height={232}
+              rx={30}
+              fill={`${d.color}2E`}
+              stroke={dp.stamp ? '#C98A12' : '#2A2B5F'}
+              strokeWidth={dp.stamp ? 5 : 3.5}
+            />
+            <rect x={-104} y={-104} width={208} height={150} rx={24} fill="#fff" opacity={0.6} />
+            <ellipse cx={0} cy={44} rx={94} ry={14} fill={d.color} opacity={0.35} />
             <g className="bldg-art" filter="url(#soft)">
               {districtArt(id, dp.tasksDone, dp.stamp)}
             </g>
+            {/* لافتة المحطة */}
             <g transform="translate(0 84)">
-              <rect x={-nameW / 2} y={-17} width={nameW} height={40} rx={20} fill="#2A2B5F" />
-              <rect x={-nameW / 2} y={-21} width={nameW} height={40} rx={20} className="bldg-label" style={{ fill: d.color }} />
-              <circle cx={nameW / 2 - 19} cy={-1} r={14} fill="#fff" />
-              <text x={nameW / 2 - 19} y={5} textAnchor="middle" className="bldg-order" style={{ fill: d.color }}>
+              <rect x={-100} y={-17} width={200} height={40} rx={20} fill="#2A2B5F" />
+              <rect x={-100} y={-21} width={200} height={40} rx={20} className="bldg-label" style={{ fill: d.color }} />
+              <circle cx={80} cy={-1} r={14} fill="#fff" stroke="#2A2B5F" strokeWidth={2} />
+              <text x={80} y={5} textAnchor="middle" className="bldg-order" style={{ fill: '#2A2B5F' }}>
                 {fmt(order)}
               </text>
               <text x={-10} y={6} textAnchor="middle" className="bldg-name on-color">
                 {d.name}
               </text>
-              {dp.stamp && (
-                <g transform={`translate(${-nameW / 2 + 2} -20)`} className="map-medal">
-                  <path d="M -9 6 L -14 30 L -7 25 L -2 32 L 2 10 Z" fill="#FF6B5B" stroke="#2A2B5F" strokeWidth={2} />
-                  <path d="M 9 6 L 14 30 L 7 25 L 2 32 L -2 10 Z" fill="#3EC5F2" stroke="#2A2B5F" strokeWidth={2} />
-                  <circle r={17} fill="#FFD24A" stroke="#8A5A00" strokeWidth={3} />
-                  <circle r={11.5} fill="#FFE98A" stroke="#C98A12" strokeWidth={1.5} />
-                  <path d="M0 -8 L2.4 -2.5 L8 -2.5 L3.6 1 L5.2 7 L0 3.6 L-5.2 7 L-3.6 1 L-8 -2.5 L-2.4 -2.5 Z" fill="#E59A0C" />
-                </g>
-              )}
             </g>
-            {!dp.stamp && dp.tasksDone > 0 && (
-              <g transform="translate(0 116)">
+            {/* تقدم المهمات أعلى المنصة */}
+            {!dp.stamp && (
+              <g transform="translate(0 -92)">
                 {Array.from({ length: settings.tasksPerDistrict }, (_, k) => (
                   <circle
                     key={k}
-                    cx={(k - (settings.tasksPerDistrict - 1) / 2) * 14 * -1}
+                    cx={(k - (settings.tasksPerDistrict - 1) / 2) * -16}
                     cy={0}
-                    r={5}
+                    r={5.5}
                     fill={k < dp.tasksDone ? d.color : '#fff'}
-                    stroke={d.color}
-                    strokeWidth={2}
+                    stroke="#2A2B5F"
+                    strokeWidth={1.8}
                   />
                 ))}
+              </g>
+            )}
+            {dp.stamp && (
+              <g transform="translate(-86 -86)" className="map-medal">
+                <path d="M -9 6 L -14 30 L -7 25 L -2 32 L 2 10 Z" fill="#FF6B5B" stroke="#2A2B5F" strokeWidth={2} />
+                <path d="M 9 6 L 14 30 L 7 25 L 2 32 L -2 10 Z" fill="#3EC5F2" stroke="#2A2B5F" strokeWidth={2} />
+                <circle r={19} fill="#FFD24A" stroke="#8A5A00" strokeWidth={3} />
+                <circle r={13} fill="#FFE98A" stroke="#C98A12" strokeWidth={1.5} />
+                <path d="M0 -9 L2.7 -2.8 L9 -2.8 L4 1.1 L5.8 7.8 L0 4 L-5.8 7.8 L-4 1.1 L-9 -2.8 L-2.7 -2.8 Z" fill="#E59A0C" />
               </g>
             )}
           </g>

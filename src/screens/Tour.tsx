@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState, type ReactNode } from 'react';
-import { enabledDistricts, projectTagline } from '../config/settings';
+import { enabledDistricts, projectTagline, branding } from '../config/settings';
 import { DISTRICTS, SKILL_NAMES } from '../content/districts';
 import { generate } from '../content/generators';
 import { createRng } from '../lib/random';
@@ -45,8 +45,10 @@ export function Tour() {
         <div className="slide-intro">
           <NohaFace size={110} mood="cheer" />
           <h1 className="tour-name">
-            مدينة الرياضيات
-            <span>ابني مدينتك بذكائك</span>
+            {branding.cityName}
+            <span>
+              {branding.cityKind} — {branding.slogan}
+            </span>
           </h1>
           <p className="tour-tagline">{projectTagline}.</p>
           {!editing ? (

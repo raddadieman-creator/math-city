@@ -54,7 +54,8 @@ export function QuestionCard({
   const feedbackRef = useRef<HTMLDivElement>(null);
   const praise = useMemo(() => PRAISE[Math.floor(Math.random() * PRAISE.length)], []);
   const locked = status !== 'answering';
-  const showHint = guided || wrong > 0;
+  const [askedHint, setAskedHint] = useState(false);
+  const showHint = guided || wrong > 0 || askedHint;
 
   // يُستخدم فقط في الاختبارات الآلية (يُفعَّل بمفتاح خاص في التخزين المحلي)
   useEffect(() => {
@@ -106,11 +107,20 @@ export function QuestionCard({
         </div>
       )}
 
+      {!showHint && status === 'answering' && (
+        <div className="noha-helper">
+          <NohaFace mood="happy" size={54} />
+          <button type="button" className="btn btn-noha" onClick={() => setAskedHint(true)}>
+            💡 تلميح من نُهى
+          </button>
+        </div>
+      )}
+
       {showHint && status === 'answering' && (
         <div className="hint-box" role="status">
-          <NohaFace mood="think" size={52} />
+          <NohaFace mood="think" size={64} />
           <div>
-            <strong className="hint-title">{guided && wrong === 0 ? 'تلميح نُهى قبل أن تبدئي' : 'تلميح'}</strong>
+            <strong className="hint-title">{guided && wrong === 0 ? 'نُهى تقول قبل أن تبدئي:' : 'نُهى تقول:'}</strong>
             <p>{q.hint}</p>
             {q.hintVisual && (
               <div className="hint-visual">
@@ -150,7 +160,7 @@ export function QuestionCard({
         {status !== 'answering' && (
           <div className={`feedback ${status === 'correct' ? 'is-right' : 'is-shown'}`}>
             <div className="feedback-head">
-              <NohaFace mood={status === 'correct' ? 'cheer' : 'happy'} size={56} />
+              <NohaFace mood={status === 'correct' ? 'cheer' : 'happy'} size={68} />
               <div>
                 <strong className="feedback-title">
                   {status === 'correct' ? praise : 'لا بأس، هذا هو الحل:'}

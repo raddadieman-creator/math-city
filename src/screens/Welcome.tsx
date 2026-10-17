@@ -1,8 +1,8 @@
-import { useId } from 'react';
+import { useId, useState } from 'react';
 import { navigate } from '../lib/router';
 import { useProgress } from '../state/progress';
-import { projectTagline } from '../config/settings';
-import { NohaFace } from '../components/Noha';
+import { projectTagline, branding } from '../config/settings';
+import { NohaFace, NohaRoles } from '../components/Noha';
 import { sfx } from '../lib/sound';
 
 const INK = '#2A2B5F';
@@ -78,6 +78,7 @@ export function Welcome() {
   const id = useId();
   const returning = progress.started;
   const name = progress.info.studentName.trim();
+  const [askName] = useState(!name);
   return (
     <main className="welcome">
       <div className="sky-deco" aria-hidden="true">
@@ -101,27 +102,53 @@ export function Welcome() {
 
       <div className="welcome-inner">
         <h1 className="welcome-title">
-          <span className="wt-main">مدينة الرياضيات</span>
-          <span className="wt-sub">ابني مدينتك بذكائك</span>
+          <span className="wt-kind">{branding.cityKind}</span>
+          <span className="wt-main">{branding.cityName}</span>
+          <span className="wt-sub">{branding.slogan}</span>
         </h1>
+
+        <section className="credits" aria-label="بيانات المشروع">
+          <div className="credit">
+            <span className="credit-icon" aria-hidden="true">
+              🧕
+            </span>
+            <span className="credit-role">إعداد الطالبة</span>
+            <strong className="credit-name">{progress.info.studentName.trim() || '—'}</strong>
+            {(progress.info.grade.trim() || progress.info.school.trim()) && (
+              <span className="credit-sub">
+                {progress.info.grade.trim() && `الصف ${progress.info.grade.trim()}`}
+                {progress.info.grade.trim() && progress.info.school.trim() && '، '}
+                {progress.info.school.trim()}
+              </span>
+            )}
+          </div>
+          <div className="credit">
+            <span className="credit-icon" aria-hidden="true">
+              👩‍🏫
+            </span>
+            <span className="credit-role">إشراف المعلمة</span>
+            <strong className="credit-name">{progress.info.teacher.trim() || '—'}</strong>
+          </div>
+        </section>
 
         <div className="welcome-card">
           <div className="welcome-noha">
-            <NohaFace mood="cheer" size={96} />
-            <p>
-              {returning ? (
-                <>
-                  أهلًا بعودتكِ{name ? ` يا ${name.split(' ')[0]}` : ''}! مدينتكِ تنتظركِ.
-                </>
-              ) : (
-                <>
-                  أنا <strong>نُهى</strong>، مرشدتكِ في المدينة. كل مسألة تحلّينها تبني شيئًا جديدًا: نافذة تُضاء، شجرة
-                  تُزرع، قطار ينطلق.
-                </>
-              )}
-            </p>
+            <NohaFace mood="cheer" size={120} />
+            <div>
+              <p className="wn-hello">
+                {returning ? (
+                  <>أهلًا بعودتكِ{name ? ` يا ${name.split(' ')[0]}` : ''}! مدينتكِ تنتظركِ.</>
+                ) : (
+                  <>
+                    أهلًا{name ? ` يا ${name.split(' ')[0]}` : ''}! أنا <strong>نُهى</strong>، مرشدتكِ في {branding.cityName}.
+                  </>
+                )}
+              </p>
+              <p className="wn-sub">سأرافقكِ في كل حي:</p>
+            </div>
           </div>
-          {!returning && (
+          <NohaRoles />
+          {askName && (
             <div className="field">
               <label htmlFor={id}>اسمكِ</label>
               <input

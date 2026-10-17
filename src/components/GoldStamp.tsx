@@ -100,13 +100,13 @@ export function GoldStamp({
         <circle cx="100" cy="100" r="64" fill={earned ? `url(#${g})` : '#F8FAFE'} stroke={earned ? '#A86F05' : '#D4DEEF'} strokeWidth="2" />
         <circle cx="100" cy="100" r="68" fill="none" stroke={earned ? '#FFF3B8' : '#DCE4F2'} strokeWidth="1.6" strokeDasharray="2 5" />
 
-        <text className="gstamp-arc" fill={earned ? '#6B4300' : '#9AAAC8'}>
+        <text className="gstamp-arc" fill={earned ? '#6B4300' : '#9AAAC8'} fontSize="21" fontWeight="800" fontFamily="'Baloo Bhaijaan 2', 'IBM Plex Sans Arabic', sans-serif">
           <textPath href={`#${arc}`} startOffset="50%" textAnchor="middle">
             {name}
           </textPath>
         </text>
 
-        <text x="100" y="128" textAnchor="middle" className="gstamp-icon" style={{ opacity: earned ? 1 : 0.28, filter: earned ? undefined : 'grayscale(1)' }}>
+        <text x="100" y="128" textAnchor="middle" className="gstamp-icon" fontSize={special ? 58 : 56} style={{ opacity: earned ? 1 : 0.28, filter: earned ? undefined : 'grayscale(1)' }}>
           {icon}
         </text>
 
@@ -121,7 +121,7 @@ export function GoldStamp({
             ))}
           </g>
         ) : (
-          <text x="100" y="160" textAnchor="middle" className="gstamp-lock" fill="#9AAAC8">
+          <text x="100" y="160" textAnchor="middle" className="gstamp-lock" fill="#9AAAC8" fontSize="18">
             🔒
           </text>
         )}
