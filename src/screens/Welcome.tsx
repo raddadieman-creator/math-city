@@ -137,10 +137,10 @@ export function Welcome() {
             <div>
               <p className="wn-hello">
                 {returning ? (
-                  <>أهلًا بعودتكِ{name ? ` يا ${name.split(' ')[0]}` : ''}! مدينتكِ تنتظركِ.</>
+                  <>أهلًا بعودتكِ! مدينتكِ تنتظركِ.</>
                 ) : (
                   <>
-                    أهلًا بكِ{name ? ` يا ${name.split(' ')[0]}` : ''}! أنا <strong>نُهى</strong>، مرشدتكِ في {branding.cityName}.
+                    أهلًا بكِ! أنا <strong>نُهى</strong>، مرشدتكِ في {branding.cityName}.
                   </>
                 )}
               </p>
