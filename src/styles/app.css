@@ -4508,7 +4508,7 @@ h2 {
   }
 }
 .noha-wand.is-up {
-  transform-origin: 122px 70px;
+  transform-origin: 128px 92px;
   animation: wave 1.6s ease-in-out infinite;
 }
 @keyframes wave {
@@ -4715,5 +4715,22 @@ h2 {
   }
   .brand-kind {
     display: none;
+  }
+}
+
+/* نُهى الروبوتة: هوائي ينبض */
+.noha-antenna {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: antennaPulse 1.8s ease-in-out infinite;
+}
+@keyframes antennaPulse {
+  50% {
+    transform: translate(0, -10px) scale(1.12);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .noha-antenna {
+    animation: none !important;
   }
 }
