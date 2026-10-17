@@ -119,12 +119,6 @@ export function DistrictScreen({ id, practice }: { id: DistrictId; practice: str
     <main className="page district-page" style={{ ['--c' as string]: d.color }}>
       <div ref={topRef} className="scroll-anchor" />
       <header className={`district-head ${phase === 'intro' || phase === 'result' ? '' : 'is-compact'}`}>
-        <a href="#/city" className="btn btn-ghost btn-sm back-btn">
-          <svg width="18" height="18" viewBox="0 0 20 20" aria-hidden="true">
-            <path d="M7 4 L13 10 L7 16" stroke="currentColor" strokeWidth="2.5" fill="none" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-          الخريطة
-        </a>
         <span className="district-badge" aria-hidden="true">
           {d.icon}
         </span>

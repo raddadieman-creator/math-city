@@ -3,7 +3,7 @@ import { enabledDistricts, projectTagline, branding } from '../config/settings';
 import { DISTRICTS, SKILL_NAMES } from '../content/districts';
 import { generate } from '../content/generators';
 import { createRng } from '../lib/random';
-import { navigate } from '../lib/router';
+import { BackButton } from '../components/BackButton';
 import { fmt } from '../lib/numbers';
 import { isMastered, useProgress } from '../state/progress';
 import { CityMap } from '../components/CityMap';
@@ -179,9 +179,7 @@ export function Tour() {
   return (
     <main className="tour">
       <div className="tour-bar">
-        <button type="button" className="btn btn-ghost btn-sm" onClick={() => navigate('/city')}>
-          إنهاء الجولة
-        </button>
+        <BackButton path="/tour" />
         <span className="tour-count" aria-live="polite">
           {fmt(i + 1)} / {fmt(slides.length)} — {slides[i].title}
         </span>

@@ -9,6 +9,7 @@ import { DistrictScreen } from './screens/DistrictScreen';
 import { Passport } from './screens/Passport';
 import { FinalMission } from './screens/FinalMission';
 import { Tour } from './screens/Tour';
+import { BackButton } from './components/BackButton';
 
 function Header({ path }: { path: string }) {
   const { progress, toggleSound } = useProgress();
@@ -19,6 +20,7 @@ function Header({ path }: { path: string }) {
   ];
   return (
     <header className="app-header">
+      <BackButton path={path} />
       <a href="#/city" className="brand" aria-label={`${branding.cityName} — العودة إلى الخريطة`}>
         <svg viewBox="0 0 64 64" width="44" height="44" aria-hidden="true" className="brand-logo">
           <rect x="2" y="2" width="60" height="60" rx="16" fill="#3EC5F2" stroke="#2A2B5F" strokeWidth="3" />

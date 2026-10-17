@@ -4734,3 +4734,92 @@ h2 {
     animation: none !important;
   }
 }
+
+/* ===== زر الرجوع (في كل الصفحات) ===== */
+.back-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 48px;
+  min-width: 48px;
+  padding: 4px 14px 4px 12px;
+  flex-shrink: 0;
+  font: inherit;
+  color: #fff;
+  background: linear-gradient(180deg, #7b6cf6, #5a4bd8);
+  border: 2.5px solid var(--ink);
+  border-radius: 999px;
+  box-shadow: 0 4px 0 var(--ink);
+  cursor: pointer;
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+.back-button:hover {
+  transform: translateY(-1px);
+}
+.back-button:active {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 var(--ink);
+}
+.back-button:focus-visible {
+  outline: 4px solid #ffc53d;
+  outline-offset: 3px;
+}
+.back-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  line-height: 1.1;
+}
+.back-main {
+  font-weight: 800;
+  font-size: 1.05rem;
+}
+.back-dest {
+  font-size: 0.72rem;
+  font-weight: 600;
+  opacity: 0.92;
+  max-width: 9em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.app-header .brand {
+  margin-inline-end: auto;
+}
+@media (max-width: 600px) {
+  .app-header .brand {
+    display: none;
+  }
+  .back-button {
+    padding-inline: 10px 12px;
+  }
+}
+@media (max-width: 380px) {
+  .back-dest {
+    display: none;
+  }
+}
+@media print {
+  .back-button {
+    display: none !important;
+  }
+}
+@media (max-width: 420px) {
+  .tour-nav {
+    padding-inline: 10px;
+    gap: 6px;
+  }
+  .tour-dots {
+    gap: 0;
+  }
+  .tour-dots .dot {
+    width: 28px;
+  }
+  .tour-nav .btn {
+    padding-inline: 14px;
+  }
+  .tour-count {
+    min-width: 0;
+    font-size: 0.85rem;
+  }
+}
