@@ -1,8 +1,7 @@
-import { useMemo, useRef, useState, type Ref } from 'react';
-import { createPortal } from 'react-dom';
+import { useMemo, useRef, useState } from 'react';
 import { buildMission } from '../content/session';
 import { DISTRICTS } from '../content/districts';
-import { enabledDistricts, branding } from '../config/settings';
+import { enabledDistricts } from '../config/settings';
 import { createRng } from '../lib/random';
 import { sfx } from '../lib/sound';
 import { useProgress } from '../state/progress';
@@ -13,109 +12,6 @@ import { ParkScene } from '../components/CityMap';
 import { navigate } from '../lib/router';
 import { fmt } from '../lib/numbers';
 import { Confetti } from '../components/Confetti';
-import { GoldStamp } from '../components/GoldStamp';
-import { ExportBar } from '../components/ExportBar';
-import { Emblem } from '../components/Emblem';
-
-function formatDates(d: Date) {
-  try {
-    const hijri = new Intl.DateTimeFormat('ar-SA-u-ca-islamic-umalqura-nu-arab', { day: 'numeric', month: 'long', year: 'numeric' }).format(d);
-    const greg = new Intl.DateTimeFormat('ar-SA-u-ca-gregory-nu-arab', { day: 'numeric', month: 'long', year: 'numeric' }).format(d);
-    return `${hijri} — ${greg}`;
-  } catch {
-    return d.toLocaleDateString();
-  }
-}
-
-export function AchievementCard({ innerRef, fixed = false }: { innerRef?: Ref<HTMLDivElement>; fixed?: boolean }) {
-  const { progress, districtProgress } = useProgress();
-  const ids = enabledDistricts();
-  const stamped = ids.filter((id) => districtProgress(id).stamp);
-  const { studentName, grade, school, teacher } = progress.info;
-  const name = studentName.trim() || 'بانية المدينة';
-  const date = formatDates(progress.finalAt ? new Date(progress.finalAt) : new Date());
-  return (
-    <div ref={innerRef} className={`ach-card ${fixed ? 'is-fixed' : ''}`} aria-label={branding.cardName}>
-      <div className="ach-frame">
-        {['tr', 'tl', 'br', 'bl'].map((c) => (
-          <span key={c} className={`ach-corner ${c}`} aria-hidden="true" />
-        ))}
-        <header className="ach-head">
-          <span className="ach-brand">
-            <Emblem size={fixed ? 58 : 46} />
-            <span>
-              <span className="ach-city">{branding.cityName}</span>
-              <span className="ach-kind">{branding.cityKind}</span>
-            </span>
-          </span>
-          <span className="ach-date">{date}</span>
-        </header>
-
-        <h2 className="ach-title">{branding.cardName}</h2>
-        <p className="ach-give">تُهدى هذه البطاقة إلى</p>
-        <p className="ach-name">{name}</p>
-        <p className="ach-text">
-          لإتمامها مهمة «افتتاح حديقة المدينة» واستخدامها الترتيب والتقدير والحساب وقراءة البيانات والأنماط لبناء مرافق
-          المدينة.
-        </p>
-
-        {stamped.length > 0 && (
-          <ul className="ach-stamps" aria-label="الأختام الذهبية">
-            {stamped.map((id, k) => (
-              <li key={id}>
-                <GoldStamp icon={DISTRICTS[id].icon} name={DISTRICTS[id].name} ribbon={DISTRICTS[id].color} earned size={fixed ? 84 : 70} rotate={[-8, 6, -4, 9][k % 4]} />
-              </li>
-            ))}
-          </ul>
-        )}
-
-        <footer className="ach-sign">
-          <div className="ach-sig">
-            <span className="ach-sig-name">{name}</span>
-            <span className="ach-sig-role">الطالبة</span>
-          </div>
-          <div className="ach-seal">
-            <GoldStamp icon="⛲" name="حديقة المدينة" ribbon="#34D6A6" earned special size={fixed ? 128 : 104} rotate={-6} />
-          </div>
-          <div className="ach-sig">
-            <span className="ach-sig-name">{teacher.trim() || '—'}</span>
-            <span className="ach-sig-role">المعلمة</span>
-          </div>
-        </footer>
-        {(grade.trim() || school.trim()) && (
-          <p className="ach-school">
-            {grade.trim() && `الصف ${grade.trim()}`}
-            {grade.trim() && school.trim() && ' — '}
-            {school.trim()}
-          </p>
-        )}
-        <p className="ach-foot">بطاقة تذكارية من مشروع مدرسي تعليمي</p>
-      </div>
-    </div>
-  );
-}
-
-function CardExport() {
-  const [stage, setStage] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
-  const prepare = () =>
-    new Promise<HTMLElement | null>((resolve) => {
-      setStage(true);
-      requestAnimationFrame(() => requestAnimationFrame(() => resolve(ref.current)));
-    });
-  return (
-    <>
-      <ExportBar prepare={prepare} filename="بطاقة-الإنجاز.png" what="البطاقة" onDone={() => setStage(false)} />
-      {stage &&
-        createPortal(
-          <div className="export-stage" aria-hidden="true">
-            <AchievementCard innerRef={ref} fixed />
-          </div>,
-          document.body,
-        )}
-    </>
-  );
-}
 
 export function FinalMission() {
   const { setFinalDone, progress, districtProgress } = useProgress();
@@ -187,11 +83,6 @@ export function FinalMission() {
             >
               {progress.finalDone ? 'أعيدي المهمة' : 'ابدئي المهمة'}
             </button>
-            {progress.finalDone && (
-              <button type="button" className="btn btn-secondary" onClick={() => setPhase('done')}>
-                عرض بطاقة الإنجاز
-              </button>
-            )}
           </div>
         </section>
       )}
@@ -224,9 +115,10 @@ export function FinalMission() {
             <p className="opening-ribbon">🎉 افتُتحت حديقة المدينة! 🎉</p>
           </div>
           <Noha mood="cheer">أحسنتِ! استخدمتِ الترتيب والتقدير والحساب وقراءة البيانات والأنماط لافتتاح الحديقة.</Noha>
-          <AchievementCard />
-          <CardExport />
-          <div className="row-actions wrap no-print">
+          <div className="row-actions wrap">
+            <button type="button" className="btn btn-gold" onClick={() => navigate('/passport')}>
+              شاهدي الختم الكبير في جوازكِ
+            </button>
             <button type="button" className="btn btn-ghost" onClick={() => navigate('/city')}>
               العودة إلى المدينة
             </button>

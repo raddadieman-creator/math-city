@@ -62,7 +62,7 @@ export const RANKS = [
   { min: 1, title: 'مستكشفة الأحياء', icon: '🧭' },
   { min: 3, title: 'بانية ماهرة', icon: '🧱' },
   { min: 6, title: 'مهندسة المدينة', icon: '📐' },
-  { min: 8, title: `عمدة ${branding.cityName}`, icon: '👑' },
+  { min: 8, title: `نجمة ${branding.cityName}`, icon: '👑' },
 ];
 
 export function rankFor(stamps: number, total: number) {

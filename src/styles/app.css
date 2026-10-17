@@ -4618,218 +4618,6 @@ h2 {
   transition: none !important;
 }
 
-/* ---------------- بطاقة الإنجاز ---------------- */
-.ach-card {
-  max-width: 920px;
-  margin: 18px auto 0;
-  padding: 12px;
-  border-radius: 26px;
-  border: var(--border);
-  box-shadow: var(--shadow);
-  background:
-    repeating-linear-gradient(45deg, #1f4594 0 6px, #24509f 6px 12px);
-}
-.ach-frame {
-  position: relative;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  gap: 6px;
-  padding: 26px 34px 20px;
-  border-radius: 18px;
-  border: 5px double #c98a12;
-  outline: 3px solid #ffd861;
-  outline-offset: -12px;
-  color: var(--ink);
-  background:
-    radial-gradient(circle at 50% 42%, rgba(255, 216, 97, 0.28) 0, transparent 48%),
-    repeating-radial-gradient(circle at 0 0, transparent 0 16px, rgba(62, 197, 242, 0.06) 16px 17px),
-    repeating-radial-gradient(circle at 100% 100%, transparent 0 16px, rgba(142, 124, 255, 0.06) 16px 17px),
-    linear-gradient(180deg, #fffdf3, #fff5d8);
-}
-.ach-corner {
-  position: absolute;
-  width: 74px;
-  height: 74px;
-  background:
-    radial-gradient(circle at 50% 50%, #ffd24a 0 9px, transparent 10px),
-    conic-gradient(from 0deg, #ffd861 0 12.5%, transparent 0 25%, #ffd861 0 37.5%, transparent 0 50%, #ffd861 0 62.5%, transparent 0 75%, #ffd861 0 87.5%, transparent 0);
-  opacity: 0.55;
-  border-radius: 50%;
-}
-.ach-corner.tr {
-  top: -26px;
-  right: -26px;
-}
-.ach-corner.tl {
-  top: -26px;
-  left: -26px;
-}
-.ach-corner.br {
-  bottom: -26px;
-  right: -26px;
-}
-.ach-corner.bl {
-  bottom: -26px;
-  left: -26px;
-}
-.ach-head {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-.ach-brand {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: #1f4594;
-  text-align: right;
-}
-.ach-brand > span {
-  display: flex;
-  flex-direction: column;
-  line-height: 1.1;
-}
-.ach-city {
-  font-family: var(--font-fun);
-  font-size: 1.6rem;
-}
-.ach-kind {
-  font-size: 0.8rem;
-  font-weight: 700;
-  color: var(--ink-soft);
-}
-.ach-date {
-  font-size: 0.85rem;
-  font-weight: 700;
-  color: #8a5a00;
-  background: #fff3c4;
-  border: 2px solid #e8b23a;
-  border-radius: 999px;
-  padding: 2px 12px;
-}
-.ach-title {
-  margin: 4px 0 0;
-  font-family: var(--font-fun);
-  font-weight: 400;
-  font-size: clamp(2rem, 6vw, 3rem);
-  line-height: 1.2;
-  background: linear-gradient(180deg, #ffe680 0, #f2b51f 45%, #b8780a 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  -webkit-text-stroke: 1.4px #6b4300;
-  filter: drop-shadow(0 3px 0 rgba(42, 43, 95, 0.3));
-}
-.ach-give {
-  margin: 0;
-  font-weight: 700;
-  color: var(--ink-soft);
-}
-.ach-name {
-  margin: 0;
-  font-family: var(--font-fun);
-  font-size: clamp(2rem, 7vw, 3.1rem);
-  line-height: 1.25;
-  color: #1f4594;
-  padding: 0 24px 4px;
-  border-bottom: 3px dotted #c98a12;
-}
-.ach-text {
-  max-width: 56ch;
-  margin: 6px 0 0;
-  font-size: 1.05rem;
-  font-weight: 500;
-}
-.ach-stamps {
-  list-style: none;
-  margin: 10px 0 2px;
-  padding: 0;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 14px 8px;
-}
-.ach-sign {
-  width: 100%;
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  align-items: end;
-  gap: 12px;
-  margin-top: 6px;
-}
-.ach-sig {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2px;
-}
-.ach-sig-name {
-  font-family: var(--font-display);
-  font-weight: 800;
-  font-size: 1.15rem;
-  min-width: 70%;
-  padding-bottom: 4px;
-  border-bottom: 2px solid var(--ink);
-}
-.ach-sig-role {
-  font-size: 0.85rem;
-  font-weight: 700;
-  color: var(--ink-soft);
-}
-.ach-school {
-  margin: 4px 0 0;
-  font-weight: 700;
-  color: #1f4594;
-}
-.ach-foot {
-  margin: 0;
-  font-size: 0.78rem;
-  color: var(--ink-soft);
-}
-.ach-card.is-fixed {
-  width: 1040px;
-  max-width: none;
-  margin: 0;
-  box-shadow: none;
-}
-.ach-card.is-fixed .ach-frame {
-  min-height: 700px;
-  justify-content: center;
-  gap: 8px;
-}
-.ach-card.is-fixed .ach-title {
-  font-size: 3.3rem;
-}
-.ach-card.is-fixed .ach-name {
-  font-size: 3.4rem;
-}
-.ach-card.is-fixed .ach-text {
-  font-size: 1.2rem;
-}
-
-@media (max-width: 620px) {
-  .ach-frame {
-    padding: 22px 14px 16px;
-  }
-  .ach-head {
-    justify-content: center;
-  }
-  .ach-sign {
-    grid-template-columns: 1fr 1fr;
-  }
-  .ach-seal {
-    grid-column: 1 / -1;
-    grid-row: 1;
-    justify-self: center;
-  }
-}
-
 /* ---------------- ورقة الجواز ---------------- */
 .pp-sheet {
   width: 1100px;
@@ -4898,15 +4686,8 @@ h2 {
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
   }
-  html.is-printing .ach-card.is-fixed .ach-frame {
-    min-height: 0;
-  }
   html.is-printing .pp-sheet .pp-page {
     min-height: 0;
-    break-inside: avoid;
-  }
-  html.is-printing .ach-card.is-fixed {
-    zoom: 0.9;
     break-inside: avoid;
   }
   html.is-printing .pp-sheet {
@@ -4919,5 +4700,20 @@ h2 {
   html.is-printing .pp-sheet-row2 {
     break-before: page;
     margin-top: 0;
+  }
+}
+
+/* الشاشات الضيقة: الشعار بلا نص حتى تتسع أزرار التنقل */
+@media (max-width: 480px) {
+  .brand-text {
+    display: none;
+  }
+}
+@media (min-width: 481px) and (max-width: 700px) {
+  .brand-name {
+    font-size: 1.25rem;
+  }
+  .brand-kind {
+    display: none;
   }
 }
