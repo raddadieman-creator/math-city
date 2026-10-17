@@ -4508,7 +4508,7 @@ h2 {
   }
 }
 .noha-wand.is-up {
-  transform-origin: 110px 58px;
+  transform-origin: 122px 70px;
   animation: wave 1.6s ease-in-out infinite;
 }
 @keyframes wave {

@@ -2,173 +2,219 @@ import { useId, type ReactNode } from 'react';
 
 type Mood = 'happy' | 'think' | 'cheer';
 
-const INK = '#2A2B5F';
 
 /**
- * المرشدة «نُهى»: بنت كرتونية في العاشرة، بشعر بني مرفوع في ضفيرتين
- * بشريطتين ورديتين وطوق عليه نجمة، وعينين كبيرتين، وتحمل قلمًا سحريًا.
- * ثلاث حالات: happy ترحّب وتشرح، think تقدّم تلميحًا، cheer تحتفل.
+ * المرشدة «نُهى» بأسلوب الرسوم المتحركة: عينان كبيرتان لامعتان، شعر طويل
+ * بخصلات ولمعة، مشبك نجمة، وقلم سحري. ثلاث حالات:
+ * happy ترحّب وتشرح، think تقدّم تلميحًا، cheer تحتفل.
  */
 export function NohaFace({ mood = 'happy', size = 88 }: { mood?: Mood; size?: number }) {
   const uid = useId().replace(/:/g, '');
-  const skin = `sk${uid}`;
-  const hair = `hr${uid}`;
-  const HAIR_DARK = '#4A2C1F';
+  const id = (n: string) => `${n}${uid}`;
+  const LINE = '#3A2230';
+  const eyes = [66.5, 93.5];
+  const eyeY = 73;
   return (
-    <svg className={`noha noha-${mood}`} width={size} height={size} viewBox="0 0 140 140" aria-hidden="true">
+    <svg className={`noha noha-${mood}`} width={size} height={size} viewBox="0 0 160 160" aria-hidden="true">
       <defs>
-        <radialGradient id={skin} cx="45%" cy="40%" r="65%">
-          <stop offset="0" stopColor="#FFE6D3" />
-          <stop offset="1" stopColor="#F5C3A0" />
+        <radialGradient id={id('bg')} cx="50%" cy="40%" r="60%">
+          <stop offset="0" stopColor="#FFF6FB" />
+          <stop offset="1" stopColor="#FFE1EF" />
         </radialGradient>
-        <linearGradient id={hair} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#8A5236" />
-          <stop offset="1" stopColor="#5E3624" />
+        <linearGradient id={id('hair')} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="#6E3E52" />
+          <stop offset="0.55" stopColor="#4E2A3E" />
+          <stop offset="1" stopColor="#7A4660" />
         </linearGradient>
+        <radialGradient id={id('skin')} cx="50%" cy="38%" r="70%">
+          <stop offset="0" stopColor="#FFF1E6" />
+          <stop offset="1" stopColor="#FAD3BC" />
+        </radialGradient>
+        <linearGradient id={id('iris')} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="#3B1F45" />
+          <stop offset="0.55" stopColor="#7C4FB8" />
+          <stop offset="1" stopColor="#C9A2FF" />
+        </linearGradient>
+        <linearGradient id={id('top')} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="#B8E8FF" />
+          <stop offset="1" stopColor="#8FD3F5" />
+        </linearGradient>
+        <clipPath id={id('clip')}>
+          <circle cx="80" cy="80" r="76" />
+        </clipPath>
       </defs>
 
-      {/* هالة خلفية */}
-      <circle cx="70" cy="72" r="64" fill="#FFF0F7" />
-      <circle cx="70" cy="72" r="64" fill="none" stroke="#FFD1E6" strokeWidth="4" strokeDasharray="3 7" />
+      <circle cx="80" cy="80" r="76" fill={`url(#${id('bg')})`} />
+      <circle cx="80" cy="80" r="76" fill="none" stroke="#FFC4DE" strokeWidth="3" strokeDasharray="2 7" strokeLinecap="round" />
 
-      {/* الضفيرتان خلف الرأس */}
-      <g stroke={INK} strokeWidth="3" strokeLinejoin="round">
-        <path d="M30 52 C 14 54 10 76 18 92 C 24 104 36 102 38 90 C 40 78 38 64 30 52 Z" fill={`url(#${hair})`} />
-        <path d="M110 52 C 126 54 130 76 122 92 C 116 104 104 102 102 90 C 100 78 102 64 110 52 Z" fill={`url(#${hair})`} />
-      </g>
-      {/* الشريطتان */}
-      {[
-        [30, 50],
-        [110, 50],
-      ].map(([x, y]) => (
-        <g key={x} transform={`translate(${x} ${y})`} stroke={INK} strokeWidth="2.2" strokeLinejoin="round">
-          <path d="M0 0 L-11 -8 L-11 8 Z" fill="#FF7AB8" />
-          <path d="M0 0 L11 -8 L11 8 Z" fill="#FF7AB8" />
-          <circle r="4" fill="#FFC53D" />
+      <g clipPath={`url(#${id('clip')})`}>
+        {/* الشعر الخلفي الطويل */}
+        <path
+          d="M40 62 C38 26 60 12 80 12 C102 12 124 26 120 62 C122 94 128 126 136 162 L24 162 C32 126 38 94 40 62 Z"
+          fill={`url(#${id('hair')})`}
+          stroke={LINE}
+          strokeWidth="1.6"
+        />
+        {/* القميص */}
+        <path d="M34 164 C36 134 56 120 80 120 C104 120 124 134 126 164 Z" fill={`url(#${id('top')})`} stroke={LINE} strokeWidth="1.6" />
+        <path d="M62 121 L80 140 L98 121 C92 119 86 118 80 118 C74 118 68 119 62 121 Z" fill="#fff" stroke={LINE} strokeWidth="1.4" strokeLinejoin="round" />
+        <g transform="translate(80 136)" stroke={LINE} strokeWidth="1.4" strokeLinejoin="round">
+          <path d="M0 0 L-12 -6 L-12 7 Z" fill="#FF8FC0" />
+          <path d="M0 0 L12 -6 L12 7 Z" fill="#FF8FC0" />
+          <path d="M-2 2 L-6 14 L0 10 L6 14 L2 2 Z" fill="#FF8FC0" />
+          <circle r="3.4" fill="#FFB3D6" />
         </g>
-      ))}
-
-      {/* الكتفان والقميص */}
-      <path d="M28 138 C 30 112 48 101 70 101 C 92 101 110 112 112 138 Z" fill="#34D6A6" stroke={INK} strokeWidth="3.5" strokeLinejoin="round" />
-      <path d="M56 103 Q 70 116 84 103 L 80 101 Q 70 108 60 101 Z" fill="#fff" stroke={INK} strokeWidth="2.5" strokeLinejoin="round" />
-      <rect x="64" y="94" width="12" height="10" rx="4" fill={`url(#${skin})`} />
-      {/* شارة المرشدة */}
-      <g transform="translate(92 122)">
-        <circle r="9" fill="#FFC53D" stroke={INK} strokeWidth="2.5" />
-        <path d="M0 -5 L1.6 -1.6 L5.3 -1.4 L2.4 1 L3.3 4.7 L0 2.7 L-3.3 4.7 L-2.4 1 L-5.3 -1.4 L-1.6 -1.6 Z" fill="#fff" />
       </g>
 
-      {/* الشعر خلف الوجه */}
-      <path d="M34 72 C 30 38 50 20 70 20 C 92 20 110 38 106 72 C 104 80 100 84 96 86 L 44 86 C 40 84 36 80 34 72 Z" fill={`url(#${hair})`} stroke={INK} strokeWidth="3.5" strokeLinejoin="round" />
+      {/* الرقبة */}
+      <path d="M71 96 L71 120 Q80 126 89 120 L89 96 Z" fill={`url(#${id('skin')})`} stroke={LINE} strokeWidth="1.4" />
+      <path d="M71 104 Q80 110 89 104 L89 98 L71 98 Z" fill="#E9B79C" opacity="0.6" />
 
       {/* الوجه */}
-      <ellipse cx="70" cy="70" rx="29" ry="30" fill={`url(#${skin})`} stroke={INK} strokeWidth="3" />
-      {/* الأذنان */}
-      <ellipse cx="41" cy="72" rx="4.5" ry="6" fill={`url(#${skin})`} stroke={INK} strokeWidth="2.5" />
-      <ellipse cx="99" cy="72" rx="4.5" ry="6" fill={`url(#${skin})`} stroke={INK} strokeWidth="2.5" />
-
-      {/* الغُرّة */}
       <path
-        d="M41 62 C 42 42 56 32 70 32 C 86 32 98 42 99 62 C 92 54 84 50 76 50 C 78 54 78 56 76 58 C 70 52 60 50 52 52 C 50 56 46 60 41 62 Z"
-        fill={`url(#${hair})`}
-        stroke={INK}
-        strokeWidth="3"
+        d="M52 62 C52 40 66 30 80 30 C94 30 108 40 108 62 C108 82 98 97 80 103 C62 97 52 82 52 62 Z"
+        fill={`url(#${id('skin')})`}
+        stroke={LINE}
+        strokeWidth="1.6"
+      />
+
+      {/* خصلتان جانبيتان */}
+      <path d="M55 46 C44 66 44 96 49 118 C55 104 57 86 60 64 Z" fill={`url(#${id('hair')})`} stroke={LINE} strokeWidth="1.5" strokeLinejoin="round" />
+      <path d="M105 46 C116 66 116 96 111 118 C105 104 103 86 100 64 Z" fill={`url(#${id('hair')})`} stroke={LINE} strokeWidth="1.5" strokeLinejoin="round" />
+
+      {/* الغُرّة بخصلات مدببة */}
+      <path
+        d="M50 64 C48 34 66 22 82 22 C99 22 114 36 110 64 C108 56 104 50 98 46 C99 51 98 54 95 56 C92 49 86 44 79 42 C80 47 78 51 74 53 C72 48 68 45 63 45 C57 48 53 55 50 64 Z"
+        fill={`url(#${id('hair')})`}
+        stroke={LINE}
+        strokeWidth="1.6"
         strokeLinejoin="round"
       />
-      <path d="M56 40 C 62 36 70 35 78 37" fill="none" stroke="#B07A5A" strokeWidth="3" strokeLinecap="round" opacity="0.7" />
+      {/* لمعة الشعر */}
+      <path d="M58 36 Q80 25 103 36 Q80 31 58 41 Z" fill="#fff" opacity="0.4" />
+      <path d="M45 80 Q44 96 47 108" fill="none" stroke="#fff" strokeOpacity="0.25" strokeWidth="2" strokeLinecap="round" />
 
-      {/* الطوق والنجمة */}
-      <path d="M40 58 C 44 34 96 34 100 58" fill="none" stroke={INK} strokeWidth="7" strokeLinecap="round" />
-      <path d="M40 58 C 44 34 96 34 100 58" fill="none" stroke="#8E7CFF" strokeWidth="4" strokeLinecap="round" />
+      {/* مشبك النجمة */}
       <path
-        transform="translate(88 37) rotate(12)"
-        d="M0 -9 L2.7 -2.8 L9 -2.8 L4 1.1 L5.8 7.8 L0 4 L-5.8 7.8 L-4 1.1 L-9 -2.8 L-2.7 -2.8 Z"
-        fill="#FFC53D"
-        stroke={INK}
-        strokeWidth="2"
+        transform="translate(103 41) rotate(14)"
+        d="M0 -8 L2.4 -2.5 L8 -2.5 L3.6 1 L5.2 7 L0 3.6 L-5.2 7 L-3.6 1 L-8 -2.5 L-2.4 -2.5 Z"
+        fill="#FFD45A"
+        stroke={LINE}
+        strokeWidth="1.3"
         strokeLinejoin="round"
       />
+      <circle cx="110" cy="35" r="1.6" fill="#fff" />
 
       {/* الحاجبان */}
-      <g fill="none" stroke={HAIR_DARK} strokeWidth="2.6" strokeLinecap="round">
+      <g fill="none" stroke="#8A5468" strokeWidth="1.4" strokeLinecap="round" opacity="0.7">
         {mood === 'think' ? (
           <>
-            <path d="M50 57 Q 56 53 62 56" />
-            <path d="M78 55 Q 84 52 90 56" />
+            <path d="M60 58 Q66 55.5 72 57.5" />
+            <path d="M88 56.5 Q94 54.5 100 57.5" />
           </>
         ) : (
           <>
-            <path d="M50 58 Q 56 55 62 58" />
-            <path d="M78 58 Q 84 55 90 58" />
+            <path d="M60 59 Q66 57 72 59" />
+            <path d="M88 59 Q94 57 100 59" />
           </>
         )}
       </g>
 
       {/* العينان */}
       {mood === 'cheer' ? (
-        <g fill="none" stroke={INK} strokeWidth="4" strokeLinecap="round">
-          <path d="M51 68 Q 57 60 63 68" />
-          <path d="M77 68 Q 83 60 89 68" />
+        <g fill="none" stroke={LINE} strokeWidth="3" strokeLinecap="round">
+          {eyes.map((cx) => (
+            <path key={cx} d={`M${cx - 8} ${eyeY + 2} Q${cx} ${eyeY - 8} ${cx + 8} ${eyeY + 2}`} />
+          ))}
         </g>
       ) : (
         <g>
-          {[57, 83].map((cx) => (
-            <g key={cx}>
-              <ellipse cx={cx} cy="68" rx="7.5" ry="8.8" fill="#fff" stroke={INK} strokeWidth="2.4" />
-              <ellipse cx={cx + (mood === 'think' ? 1.5 : 0)} cy={mood === 'think' ? 65.5 : 69} rx="5.2" ry="6.2" fill="#3B2A55" />
-              <circle cx={cx + 2} cy={mood === 'think' ? 63 : 66.5} r="2.2" fill="#fff" />
-              <circle cx={cx - 1.6} cy={mood === 'think' ? 68 : 72} r="1" fill="#fff" />
-              <path d={`M${cx + 6} 61 l3 -3 M${cx + 7.5} 64 l3.5 -1.5`} stroke={INK} strokeWidth="1.8" strokeLinecap="round" />
-            </g>
-          ))}
+          {eyes.map((cx, k) => {
+            const up = mood === 'think' ? -2.5 : 0;
+            const side = mood === 'think' ? 1.5 : 0;
+            const outer = k === 0 ? -1 : 1;
+            return (
+              <g key={cx}>
+                <ellipse cx={cx} cy={eyeY} rx="9.6" ry="11.6" fill="#fff" />
+                <ellipse cx={cx + side} cy={eyeY + 1 + up} rx="7.8" ry="10" fill={`url(#${id('iris')})`} />
+                <ellipse cx={cx + side} cy={eyeY + 1.5 + up} rx="3.4" ry="4.6" fill="#241229" />
+                <ellipse cx={cx + side - 2.8} cy={eyeY - 3.4 + up} rx="3.4" ry="4" fill="#fff" />
+                <circle cx={cx + side + 3} cy={eyeY + 5 + up} r="1.5" fill="#fff" />
+                <path d={`M${cx - 6} ${eyeY + 7 + up} Q${cx + side} ${eyeY + 10 + up} ${cx + 6} ${eyeY + 6 + up}`} fill="none" stroke="#E9D8FF" strokeWidth="1.4" strokeLinecap="round" opacity="0.8" />
+                {/* الرموش العلوية */}
+                <path
+                  d={`M${cx - 10.5} ${eyeY - 3} Q${cx} ${eyeY - 15} ${cx + 10.5} ${eyeY - 3}`}
+                  fill="none"
+                  stroke={LINE}
+                  strokeWidth="3"
+                  strokeLinecap="round"
+                />
+                <path d={`M${cx + 10.5 * outer} ${eyeY - 3} l${3.5 * outer} -3`} stroke={LINE} strokeWidth="2.2" strokeLinecap="round" />
+                <path d={`M${cx - 5} ${eyeY + 10.5} Q${cx} ${eyeY + 12} ${cx + 5} ${eyeY + 10.5}`} fill="none" stroke={LINE} strokeWidth="1" opacity="0.5" />
+              </g>
+            );
+          })}
         </g>
       )}
 
-      {/* الأنف والخدّان */}
-      <path d="M69 76 Q 70 78 72 77" fill="none" stroke="#C98366" strokeWidth="2" strokeLinecap="round" />
-      <ellipse cx="48" cy="81" rx="6" ry="4" fill="#FF8FB1" opacity="0.55" />
-      <ellipse cx="92" cy="81" rx="6" ry="4" fill="#FF8FB1" opacity="0.55" />
+      {/* الخدّان */}
+      <g opacity="0.55">
+        <ellipse cx="59" cy="87" rx="7" ry="3.8" fill="#FF9DBF" />
+        <ellipse cx="101" cy="87" rx="7" ry="3.8" fill="#FF9DBF" />
+      </g>
+      <g stroke="#F07AA5" strokeWidth="1.1" strokeLinecap="round" opacity="0.8">
+        <path d="M55 88 l2 -3 M59 88 l2 -3 M63 88 l2 -3" />
+        <path d="M97 88 l2 -3 M101 88 l2 -3 M105 88 l2 -3" />
+      </g>
+
+      {/* الأنف */}
+      <path d="M80 84 l-1 2.5" stroke="#D99A80" strokeWidth="1.5" strokeLinecap="round" />
 
       {/* الفم */}
-      {mood === 'think' ? (
-        <path d="M63 85 Q 70 90 77 84" fill="none" stroke="#9A3F4E" strokeWidth="3" strokeLinecap="round" />
-      ) : mood === 'cheer' ? (
-        <path d="M60 82 Q 70 97 80 82 Z" fill="#E2546E" stroke="#9A3F4E" strokeWidth="2.5" strokeLinejoin="round" />
+      {mood === 'cheer' ? (
+        <g>
+          <path d="M73 91 Q80 101 87 91 Z" fill="#E55C7E" stroke={LINE} strokeWidth="1.4" strokeLinejoin="round" />
+          <path d="M76 96 Q80 99 84 96" fill="#FF9DB4" />
+        </g>
+      ) : mood === 'think' ? (
+        <path d="M76 93 Q80 95 84 92" fill="none" stroke={LINE} strokeWidth="1.6" strokeLinecap="round" />
       ) : (
-        <path d="M61 83 Q 70 92 79 83" fill="none" stroke="#9A3F4E" strokeWidth="3" strokeLinecap="round" />
+        <path d="M74 92 Q80 97 86 92" fill="none" stroke={LINE} strokeWidth="1.8" strokeLinecap="round" />
       )}
 
       {/* اليد والقلم السحري */}
       {mood === 'think' ? (
         <g>
-          <circle cx="46" cy="98" r="8" fill={`url(#${skin})`} stroke={INK} strokeWidth="2.5" />
-          <g transform="translate(116 22)">
-            <circle r="13" fill="#fff" stroke={INK} strokeWidth="2.5" />
-            <text x="0" y="6" textAnchor="middle" fontSize="18" fontWeight="800" fill="#8E74F2">
+          <g transform="translate(130 28)">
+            <circle r="13" fill="#fff" stroke="#C9A2FF" strokeWidth="2" />
+            <text x="0" y="6" textAnchor="middle" fontSize="17" fontWeight="800" fill="#7C4FB8">
               ؟
             </text>
           </g>
+          <circle cx="114" cy="44" r="2.4" fill="#C9A2FF" />
+          <circle cx="110" cy="52" r="1.6" fill="#C9A2FF" />
         </g>
       ) : (
         <g className={mood === 'cheer' ? 'noha-wand is-up' : 'noha-wand'}>
-          <line x1="112" y1={mood === 'cheer' ? 56 : 106} x2="126" y2={mood === 'cheer' ? 26 : 82} stroke={INK} strokeWidth="4" strokeLinecap="round" />
-          <line x1="112" y1={mood === 'cheer' ? 56 : 106} x2="126" y2={mood === 'cheer' ? 26 : 82} stroke="#FF7AB8" strokeWidth="2" strokeLinecap="round" />
+          <line x1="124" y1={mood === 'cheer' ? 66 : 124} x2="140" y2={mood === 'cheer' ? 34 : 96} stroke={LINE} strokeWidth="3.4" strokeLinecap="round" />
+          <line x1="124" y1={mood === 'cheer' ? 66 : 124} x2="140" y2={mood === 'cheer' ? 34 : 96} stroke="#FF9DC8" strokeWidth="1.8" strokeLinecap="round" />
           <path
-            transform={`translate(127 ${mood === 'cheer' ? 22 : 78})`}
+            transform={`translate(141 ${mood === 'cheer' ? 30 : 92})`}
             d="M0 -10 L3 -3 L10 -3 L4.5 1.5 L6.5 9 L0 4.5 L-6.5 9 L-4.5 1.5 L-10 -3 L-3 -3 Z"
-            fill="#FFC53D"
-            stroke={INK}
-            strokeWidth="2"
+            fill="#FFD45A"
+            stroke={LINE}
+            strokeWidth="1.4"
             strokeLinejoin="round"
           />
-          <circle cx="110" cy={mood === 'cheer' ? 60 : 108} r="8" fill={`url(#${skin})`} stroke={INK} strokeWidth="2.5" />
+          <circle cx="122" cy={mood === 'cheer' ? 70 : 128} r="6.5" fill={`url(#${id('skin')})`} stroke={LINE} strokeWidth="1.4" />
         </g>
       )}
 
       {mood === 'cheer' && (
-        <g fill="#FFC53D" className="noha-sparkle">
-          <path d="M16 30 l2 5 5 2 -5 2 -2 5 -2 -5 -5 -2 5 -2 z" />
-          <path d="M28 14 l1.4 3.5 3.5 1.4 -3.5 1.4 -1.4 3.5 -1.4 -3.5 -3.5 -1.4 3.5 -1.4 z" />
+        <g fill="#FFD45A" className="noha-sparkle">
+          <path d="M22 40 l2 5 5 2 -5 2 -2 5 -2 -5 -5 -2 5 -2 z" />
+          <path d="M36 22 l1.4 3.5 3.5 1.4 -3.5 1.4 -1.4 3.5 -1.4 -3.5 -3.5 -1.4 3.5 -1.4 z" />
+          <path d="M128 12 l1.2 3 3 1.2 -3 1.2 -1.2 3 -1.2 -3 -3 -1.2 3 -1.2 z" />
         </g>
       )}
     </svg>
