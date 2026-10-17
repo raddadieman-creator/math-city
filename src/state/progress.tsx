@@ -25,6 +25,8 @@ export interface Progress {
   version: 1;
   started: boolean;
   info: typeof defaultProjectInfo;
+  /** اسم الطالبة التي تستخدم الموقع الآن (يظهر في الترحيب والجواز) */
+  playerName: string;
   districts: Partial<Record<DistrictId, DistrictProgress>>;
   skills: Partial<Record<SkillId, SkillStat>>;
   bricks: number;
@@ -40,6 +42,7 @@ function fresh(): Progress {
     version: 1,
     started: false,
     info: { ...defaultProjectInfo },
+    playerName: '',
     districts: {},
     skills: {},
     bricks: 0,
@@ -59,7 +62,7 @@ function load(): Progress {
     (Object.keys(info) as (keyof typeof info)[]).forEach((k) => {
       if (p.info?.[k]?.trim()) info[k] = p.info[k];
     });
-    return { ...fresh(), ...p, info };
+    return { ...fresh(), ...p, info, playerName: typeof p.playerName === 'string' ? p.playerName : '' };
   } catch {
     return fresh();
   }
@@ -85,6 +88,7 @@ interface Ctx {
   completeDistrict: (d: DistrictId) => void;
   resetDistrictRun: (d: DistrictId) => void;
   setInfo: (info: Partial<Progress['info']>) => void;
+  setPlayerName: (name: string) => void;
   setStarted: () => void;
   setFinalDone: () => void;
   toggleSound: () => void;
@@ -157,10 +161,11 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
           return { ...p, districts: { ...p.districts, [d]: { ...dp, tasksDone: 0 } } };
         }),
       setInfo: (info) => update((p) => ({ ...p, info: { ...p.info, ...info } })),
+      setPlayerName: (name) => update((p) => ({ ...p, playerName: name })),
       setStarted: () => update((p) => ({ ...p, started: true, issuedAt: p.issuedAt ?? new Date().toISOString() })),
       setFinalDone: () => update((p) => ({ ...p, finalDone: true, finalAt: p.finalAt ?? new Date().toISOString() })),
       toggleSound: () => update((p) => ({ ...p, sound: !p.sound })),
-      resetAll: () => setProgress((p) => ({ ...fresh(), started: true, issuedAt: new Date().toISOString(), sound: p.sound, info: p.info })),
+      resetAll: () => setProgress((p) => ({ ...fresh(), started: true, issuedAt: new Date().toISOString(), sound: p.sound, info: p.info, playerName: p.playerName })),
       weakSkills: (d) => {
         const skills = d ? DISTRICTS[d].skills : enabled.flatMap((x) => DISTRICTS[x].skills);
         return skills.filter((s) => {

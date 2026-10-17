@@ -2,7 +2,7 @@ import { useId } from 'react';
 import { useProgress } from '../state/progress';
 
 const FIELDS = [
-  { key: 'studentName', label: 'اسم الطالبة', auto: 'name' },
+  { key: 'studentName', label: 'إعداد الطالبة', auto: 'name' },
   { key: 'grade', label: 'الصف', auto: 'off', placeholder: 'مثل: الرابع الابتدائي' },
   { key: 'school', label: 'المدرسة', auto: 'organization' },
   { key: 'teacher', label: 'المعلمة', auto: 'off' },

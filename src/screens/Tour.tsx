@@ -54,7 +54,7 @@ export function Tour() {
           {!editing ? (
             <dl className="tour-info">
               <div>
-                <dt>الطالبة</dt>
+                <dt>إعداد الطالبة</dt>
                 <dd>{studentName || '—'}</dd>
               </div>
               <div>

@@ -74,10 +74,10 @@ function HeroScene() {
 const FLOATERS = ['+', '٧', '×', '٣', '=', '٥', '−', '٩', '٢', '<'];
 
 export function Welcome() {
-  const { progress, setStarted, setInfo } = useProgress();
+  const { progress, setStarted, setPlayerName } = useProgress();
   const id = useId();
   const returning = progress.started;
-  const name = progress.info.studentName.trim();
+  const name = progress.playerName.trim();
   const [askName] = useState(!name);
   return (
     <main className="welcome">
@@ -140,7 +140,7 @@ export function Welcome() {
                   <>أهلًا بعودتكِ{name ? ` يا ${name.split(' ')[0]}` : ''}! مدينتكِ تنتظركِ.</>
                 ) : (
                   <>
-                    أهلًا{name ? ` يا ${name.split(' ')[0]}` : ''}! أنا <strong>نُهى</strong>، مرشدتكِ في {branding.cityName}.
+                    أهلًا بكِ{name ? ` يا ${name.split(' ')[0]}` : ''}! أنا <strong>نُهى</strong>، مرشدتكِ في {branding.cityName}.
                   </>
                 )}
               </p>
@@ -150,12 +150,12 @@ export function Welcome() {
           <NohaRoles />
           {askName && (
             <div className="field">
-              <label htmlFor={id}>اسمكِ</label>
+              <label htmlFor={id}>اكتبي اسمكِ ليظهر في جوازكِ</label>
               <input
                 id={id}
                 type="text"
-                value={progress.info.studentName}
-                onChange={(e) => setInfo({ studentName: e.target.value })}
+                value={progress.playerName}
+                onChange={(e) => setPlayerName(e.target.value)}
                 autoComplete="given-name"
                 maxLength={40}
                 placeholder="اكتبي اسمكِ"

@@ -8,7 +8,6 @@ import { navigate, useMedia } from '../lib/router';
 import { fmt } from '../lib/numbers';
 import { sfx } from '../lib/sound';
 import { Num } from '../components/Num';
-import { ProjectInfoForm } from '../components/ProjectInfoForm';
 import { GoldStamp, arabicShortDate } from '../components/GoldStamp';
 import { Emblem } from '../components/Emblem';
 import { ExportBar } from '../components/ExportBar';
@@ -137,7 +136,8 @@ function Page({ num, title, children, className = '' }: { num: number; title: st
 }
 
 function IdentityPage({ progress, stamps, total }: { progress: Progress; stamps: number; total: number }) {
-  const { studentName, grade, school, teacher } = progress.info;
+  const { grade, school, teacher } = progress.info;
+  const studentName = progress.playerName;
   const rank = rankFor(stamps, total);
   const toNext = rank.next ? Math.max(0, Math.ceil((rank.next.min / 8) * total) - stamps) : 0;
   const mrzName = (studentName.trim() || 'بانية المدينة').replace(/\s+/g, '‹');
@@ -323,7 +323,7 @@ function PassportSheet({ innerRef, progress, ids, stamps }: { innerRef: Ref<HTML
         <div>
           <strong>{branding.passportName}</strong>
           <span>
-            {progress.info.studentName.trim() || 'بانية المدينة'} — <Num v={stamps} /> / <Num v={ids.length} /> ختم ذهبي
+            {progress.playerName.trim() || 'بانية المدينة'} — <Num v={stamps} /> / <Num v={ids.length} /> ختم ذهبي
           </span>
         </div>
       </header>
@@ -364,7 +364,7 @@ function PassportExport({ progress, ids, stamps }: { progress: Progress; ids: Di
 /* ---------------- الشاشة ---------------- */
 
 export function Passport() {
-  const { progress, districtProgress, resetAll } = useProgress();
+  const { progress, districtProgress, resetAll, setPlayerName } = useProgress();
   const [confirm, setConfirm] = useState(false);
   const [open, setOpen] = useState(false);
   const [spread, setSpread] = useState(0);
@@ -372,7 +372,7 @@ export function Passport() {
   const wide = useMedia('(min-width: 900px)');
   const ids = enabledDistricts();
   const stamps = ids.filter((id) => districtProgress(id).stamp).length;
-  const name = progress.info.studentName.trim();
+  const name = progress.playerName.trim();
 
   const pages = [
     <IdentityPage key="id" progress={progress} stamps={stamps} total={ids.length} />,
@@ -467,13 +467,24 @@ export function Passport() {
       )}
 
       <section className="card" aria-labelledby="info-title">
-        <h2 id="info-title">بيانات المشروع</h2>
-        <ProjectInfoForm />
+        <h2 id="info-title">اسمكِ في الجواز</h2>
+        <div className="field">
+          <label htmlFor="pp-player-name">اسم حاملة الجواز</label>
+          <input
+            id="pp-player-name"
+            type="text"
+            value={progress.playerName}
+            onChange={(e) => setPlayerName(e.target.value)}
+            autoComplete="name"
+            maxLength={40}
+            placeholder="اكتبي اسمكِ"
+          />
+        </div>
       </section>
 
       <section className="card danger-zone">
         <h2>بدء رحلة جديدة</h2>
-        <p>يحذف الأختام والتقدّم المحفوظ في هذا الجهاز، ويُبقي بيانات المشروع.</p>
+        <p>يحذف الأختام والتقدّم المحفوظ في هذا الجهاز، ويُبقي الاسم.</p>
         <button type="button" className="btn btn-danger" onClick={() => setConfirm(true)}>
           بدء رحلة جديدة
         </button>
