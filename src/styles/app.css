@@ -4067,8 +4067,9 @@ h2 {
 }
 .pp-photo-seal {
   position: absolute;
-  bottom: -4px;
-  left: -4px;
+  bottom: -6px;
+  left: -6px;
+  opacity: 0.8;
   color: rgba(201, 138, 18, 0.75);
   transform: rotate(-14deg);
 }

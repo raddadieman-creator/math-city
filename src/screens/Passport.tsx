@@ -98,20 +98,92 @@ function fullDate(iso?: string) {
 
 /* ---------------- رسم صورة حاملة الجواز ---------------- */
 
+/** صورة حاملة الجواز: أميرة ببشرة حنطية وشعر بني متوسط الطول */
 function HolderPortrait() {
   return (
     <svg viewBox="0 0 120 140" className="pp-photo-svg" aria-hidden="true">
-      <rect width="120" height="140" fill="#D6F4FF" />
-      <circle cx="96" cy="22" r="10" fill="#FFE066" />
-      <path d="M18 140 C 18 108 36 96 60 96 C 84 96 102 108 102 140 Z" fill="#34D6A6" stroke="#2A2B5F" strokeWidth="3" />
-      <path d="M26 74 C 22 40 42 22 60 22 C 80 22 100 40 96 74 C 96 98 82 112 60 112 C 38 112 26 98 26 74 Z" fill="#8E7CFF" stroke="#2A2B5F" strokeWidth="3" />
-      <ellipse cx="60" cy="68" rx="24" ry="26" fill="#F6C9A8" />
-      <circle cx="51" cy="65" r="3.6" fill="#2A2B5F" />
-      <circle cx="69" cy="65" r="3.6" fill="#2A2B5F" />
-      <circle cx="45" cy="75" r="4" fill="#FF9F95" opacity="0.6" />
-      <circle cx="75" cy="75" r="4" fill="#FF9F95" opacity="0.6" />
-      <path d="M52 79 Q 60 87 68 79" stroke="#9A4A3E" strokeWidth="3" fill="none" strokeLinecap="round" />
-      <path d="M84 36 l2.6 5.4 5.8 .8 -4.2 4 1 5.8 -5.2 -2.8 -5.2 2.8 1 -5.8 -4.2 -4 5.8 -.8 z" fill="#FFC53D" stroke="#2A2B5F" strokeWidth="1.5" />
+      <defs>
+        <linearGradient id="hpBg" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="#FFE6F3" />
+          <stop offset="1" stopColor="#E9E2FF" />
+        </linearGradient>
+        <linearGradient id="hpHair" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="#9A6338" />
+          <stop offset="1" stopColor="#7A4A26" />
+        </linearGradient>
+        <linearGradient id="hpDress" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="#FF9CCB" />
+          <stop offset="1" stopColor="#F26FAE" />
+        </linearGradient>
+        <linearGradient id="hpGold" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="#FFE68A" />
+          <stop offset="1" stopColor="#E8A912" />
+        </linearGradient>
+      </defs>
+      <rect width="120" height="140" fill="url(#hpBg)" />
+      <g fill="#FFFFFF" opacity="0.9">
+        <path d="M14 22 l1.6 4 4 1.6 -4 1.6 -1.6 4 -1.6 -4 -4 -1.6 4 -1.6 z" />
+        <path d="M104 48 l1.2 3 3 1.2 -3 1.2 -1.2 3 -1.2 -3 -3 -1.2 3 -1.2 z" />
+        <circle cx="20" cy="54" r="1.4" />
+        <circle cx="100" cy="20" r="1.6" />
+      </g>
+
+      {/* الشعر الخلفي (بني متوسط، يصل إلى الكتفين) */}
+      <path d="M33 60 C 30 36 44 24 60 24 C 76 24 90 36 87 60 C 88 76 93 88 92 98 C 91 104 86 106 82 102 C 80 106 75 106 73 102 L 47 102 C 45 106 40 106 38 102 C 34 106 29 104 28 98 C 27 88 32 76 33 60 Z" fill="url(#hpHair)" stroke="#2A2B5F" strokeWidth="2.4" strokeLinejoin="round" />
+
+      {/* الفستان */}
+      <path d="M22 140 C 22 118 34 103 48 100 L 72 100 C 86 103 98 118 98 140 Z" fill="url(#hpDress)" stroke="#2A2B5F" strokeWidth="2.4" strokeLinejoin="round" />
+      <circle cx="32" cy="113" r="8.5" fill="#FFC2DE" stroke="#2A2B5F" strokeWidth="2.2" />
+      <circle cx="88" cy="113" r="8.5" fill="#FFC2DE" stroke="#2A2B5F" strokeWidth="2.2" />
+      <path d="M46 100 Q 60 112 74 100" fill="#FFE1EF" stroke="#2A2B5F" strokeWidth="2" />
+      {/* الرقبة */}
+      <path d="M53.5 87 L 53.5 100 Q 60 104 66.5 100 L 66.5 87 Z" fill="#D9A378" stroke="#2A2B5F" strokeWidth="2" />
+      {/* عقد ذهبي */}
+      <path d="M51 99.5 Q 60 108 69 99.5" fill="none" stroke="#E8A912" strokeWidth="1.8" />
+      <circle cx="60" cy="105" r="2.6" fill="#8E7CFF" stroke="#2A2B5F" strokeWidth="1.2" />
+
+      {/* الوجه (بشرة حنطية) */}
+      <ellipse cx="60" cy="66" rx="24" ry="25" fill="#E6B98F" stroke="#2A2B5F" strokeWidth="2.4" />
+
+      {/* خصلات جانبية */}
+      <path d="M36 52 C 31 66 32 84 36 96 C 38 99 41 97 40 93 C 41 84 41 76 42 66 Z" fill="url(#hpHair)" stroke="#2A2B5F" strokeWidth="2" strokeLinejoin="round" />
+      <path d="M84 52 C 89 66 88 84 84 96 C 82 99 79 97 80 93 C 79 84 79 76 78 66 Z" fill="url(#hpHair)" stroke="#2A2B5F" strokeWidth="2" strokeLinejoin="round" />
+      {/* الغُرّة */}
+      <path d="M35 56 C 36 38 48 31 60 31 C 73 31 85 38 85 56 C 78 50 70 46 62 45 C 58 50 50 54 42 54 C 40 55 37 56 35 56 Z" fill="url(#hpHair)" stroke="#2A2B5F" strokeWidth="2.2" strokeLinejoin="round" />
+      <path d="M70 37 Q 76 40 79 46" stroke="#C08654" strokeWidth="2" fill="none" strokeLinecap="round" opacity="0.8" />
+      <path d="M46 38 Q 54 34 62 36" stroke="#C08654" strokeWidth="2" fill="none" strokeLinecap="round" opacity="0.8" />
+
+      {/* التاج */}
+      <g stroke="#2A2B5F" strokeWidth="1.8" strokeLinejoin="round">
+        <path d="M44 34 L 46 20 L 53 28 L 60 16 L 67 28 L 74 20 L 76 34 Z" fill="url(#hpGold)" />
+        <rect x="43" y="32" width="34" height="5" rx="2.5" fill="url(#hpGold)" />
+        <circle cx="46" cy="19" r="2.2" fill="#FFF3B0" />
+        <circle cx="60" cy="15" r="2.6" fill="#FFF3B0" />
+        <circle cx="74" cy="19" r="2.2" fill="#FFF3B0" />
+      </g>
+      <circle cx="60" cy="27.5" r="3" fill="#FF6FA8" stroke="#2A2B5F" strokeWidth="1.4" />
+      <circle cx="51" cy="34.5" r="1.5" fill="#5ED6F2" />
+      <circle cx="69" cy="34.5" r="1.5" fill="#5ED6F2" />
+
+      {/* الحاجبان */}
+      <path d="M45 59 Q 50 56.5 55 58.5" stroke="#6B4022" strokeWidth="1.8" fill="none" strokeLinecap="round" />
+      <path d="M65 58.5 Q 70 56.5 75 59" stroke="#6B4022" strokeWidth="1.8" fill="none" strokeLinecap="round" />
+      {/* العينان */}
+      <ellipse cx="50" cy="67" rx="4.4" ry="5.4" fill="#4A2A18" />
+      <ellipse cx="70" cy="67" rx="4.4" ry="5.4" fill="#4A2A18" />
+      <circle cx="51.6" cy="65" r="1.7" fill="#fff" />
+      <circle cx="71.6" cy="65" r="1.7" fill="#fff" />
+      <circle cx="48.8" cy="69.4" r="0.8" fill="#fff" />
+      <circle cx="68.8" cy="69.4" r="0.8" fill="#fff" />
+      <path d="M44.6 63.6 Q 50 60 55.4 63.6" stroke="#2A2B5F" strokeWidth="1.7" fill="none" strokeLinecap="round" />
+      <path d="M64.6 63.6 Q 70 60 75.4 63.6" stroke="#2A2B5F" strokeWidth="1.7" fill="none" strokeLinecap="round" />
+      <path d="M44.8 63.8 L 43 62.4" stroke="#2A2B5F" strokeWidth="1.4" strokeLinecap="round" />
+      <path d="M75.2 63.8 L 77 62.4" stroke="#2A2B5F" strokeWidth="1.4" strokeLinecap="round" />
+      {/* الخدود والأنف والابتسامة */}
+      <ellipse cx="43.5" cy="75" rx="4.4" ry="2.8" fill="#FF8C9E" opacity="0.45" />
+      <ellipse cx="76.5" cy="75" rx="4.4" ry="2.8" fill="#FF8C9E" opacity="0.45" />
+      <path d="M59 72.5 Q 60 74 61 72.5" stroke="#B47A52" strokeWidth="1.4" fill="none" strokeLinecap="round" />
+      <path d="M54 78 Q 60 83.5 66 78" stroke="#B5405A" strokeWidth="2" fill="#F4A0AE" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 }
@@ -147,7 +219,7 @@ function IdentityPage({ progress, stamps, total }: { progress: Progress; stamps:
         <div className="pp-photo">
           <HolderPortrait />
           <span className="pp-photo-seal" aria-hidden="true">
-            <Emblem size={46} />
+            <Emblem size={34} />
           </span>
         </div>
         <dl className="pp-fields">
@@ -204,7 +276,7 @@ function IdentityPage({ progress, stamps, total }: { progress: Progress; stamps:
       </div>
 
       <p className="pp-mrz" aria-hidden="true" dir="rtl">
-        ‹‹مدينة‹الرياضيات‹‹{mrzName}‹‹{fmt(stamps)}‹{fmt(total)}‹‹‹‹‹‹
+        ‹‹{branding.cityName.replace(/\s+/g, '‹')}‹‹{mrzName}‹‹{fmt(stamps)}‹{fmt(total)}‹‹‹‹‹‹
       </p>
     </Page>
   );
