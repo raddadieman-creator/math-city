@@ -1,5 +1,6 @@
-import { useEffect, useId, useRef, useState, type ReactNode, type Ref } from 'react';
+import { useEffect, useRef, useState, type ReactNode, type Ref } from 'react';
 import { createPortal } from 'react-dom';
+import { NohaFace } from '../components/Noha';
 import { enabledDistricts, branding, type DistrictId } from '../config/settings';
 import { DISTRICTS, SKILL_NAMES } from '../content/districts';
 import type { SkillId } from '../content/types';
@@ -98,154 +99,14 @@ function fullDate(iso?: string) {
 
 /* ---------------- رسم صورة حاملة الجواز ---------------- */
 
-/** صورة حاملة الجواز: أميرة بأسلوب الأنيمي، بشرة حنطية وشعر بني متوسط الطول */
+/** صورة حاملة الجواز: روبوت لطيف بنفس شكل المرشدة نُهى */
 function HolderPortrait() {
-  const u = 'hp' + useId().replace(/[^a-zA-Z0-9]/g, '');
   return (
-    <svg viewBox="0 0 240 280" className="pp-photo-svg" aria-hidden="true">
-      <defs>
-        <radialGradient id={`${u}Bg`} cx="0.5" cy="0.35" r="0.8">
-          <stop offset="0" stopColor="#FFF5FB" />
-          <stop offset="0.6" stopColor="#FBDCEE" />
-          <stop offset="1" stopColor="#DECFFF" />
-        </radialGradient>
-        <linearGradient id={`${u}Hair`} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#94603A" />
-          <stop offset="1" stopColor="#6B4022" />
-        </linearGradient>
-        <linearGradient id={`${u}HairFront`} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#A9713F" />
-          <stop offset="1" stopColor="#83512B" />
-        </linearGradient>
-        <linearGradient id={`${u}Skin`} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#EAC09A" />
-          <stop offset="1" stopColor="#F2CCA8" />
-        </linearGradient>
-        <linearGradient id={`${u}Iris`} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#2B170B" />
-          <stop offset="0.5" stopColor="#7A4420" />
-          <stop offset="1" stopColor="#E0A85C" />
-        </linearGradient>
-        <linearGradient id={`${u}Dress`} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#FFBEDD" />
-          <stop offset="1" stopColor="#EE82BA" />
-        </linearGradient>
-        <linearGradient id={`${u}Gold`} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#FFF2B0" />
-          <stop offset="0.5" stopColor="#F7C948" />
-          <stop offset="1" stopColor="#D9980F" />
-        </linearGradient>
-        <radialGradient id={`${u}Blush`} cx="0.5" cy="0.5" r="0.5">
-          <stop offset="0" stopColor="#FF8DA2" stopOpacity="0.6" />
-          <stop offset="1" stopColor="#FF8DA2" stopOpacity="0" />
-        </radialGradient>
-        <clipPath id={`${u}EyeL`}><path d="M86 140 C 87 127 107 122 115 133 C 118 146 111 158 101 158 C 92 158 86 150 86 140 Z" /></clipPath>
-        <clipPath id={`${u}EyeR`}><path d="M154 140 C 153 127 133 122 125 133 C 122 146 129 158 139 158 C 148 158 154 150 154 140 Z" /></clipPath>
-      </defs>
-
-      {/* الخلفية */}
-      <rect width="240" height="280" fill={`url(#${u}Bg)`} />
-      <g fill="#FFFFFF">
-        <circle cx="28" cy="58" r="10" opacity="0.35" />
-        <circle cx="212" cy="100" r="13" opacity="0.3" />
-        <circle cx="204" cy="30" r="6" opacity="0.5" />
-        <path d="M34 116 l2.6 6.4 6.4 2.6 -6.4 2.6 -2.6 6.4 -2.6 -6.4 -6.4 -2.6 6.4 -2.6 z" opacity="0.95" />
-        <path d="M208 156 l2 5 5 2 -5 2 -2 5 -2 -5 -5 -2 5 -2 z" opacity="0.95" />
-        <path d="M190 58 l1.6 4 4 1.6 -4 1.6 -1.6 4 -1.6 -4 -4 -1.6 4 -1.6 z" opacity="0.9" />
-      </g>
-
-      {/* الشعر الخلفي (بني متوسط الطول، يتجاوز الكتفين قليلًا) */}
-      <path d="M120 40 C 80 40 60 72 60 112 C 60 150 56 186 50 216 C 46 234 54 246 66 242 C 70 252 84 254 90 244 L 150 244 C 156 254 170 252 174 242 C 186 246 194 234 190 216 C 184 186 180 150 180 112 C 180 72 160 40 120 40 Z" fill={`url(#${u}Hair)`} stroke="#4A2A14" strokeWidth="1.5" strokeLinejoin="round" />
-
-      {/* الرقبة والفستان */}
-      <path d="M112 176 L 112 202 Q 120 207 128 202 L 128 176 Z" fill="#DCA67B" />
-      <path d="M38 280 C 42 238 70 210 102 200 L 138 200 C 170 210 198 238 202 280 Z" fill={`url(#${u}Dress)`} stroke="#A3477A" strokeWidth="1.5" strokeLinejoin="round" />
-      <path d="M56 238 C 48 222 62 206 82 208 C 92 218 88 236 74 242 C 66 244 60 242 56 238 Z" fill="#FFD3E8" stroke="#A3477A" strokeWidth="1.3" />
-      <path d="M184 238 C 192 222 178 206 158 208 C 148 218 152 236 166 242 C 174 244 180 242 184 238 Z" fill="#FFD3E8" stroke="#A3477A" strokeWidth="1.3" />
-      <path d="M98 200 Q 103 215 111 209 Q 120 220 129 209 Q 137 215 142 200 Z" fill="#FFFFFF" stroke="#D08AAE" strokeWidth="1.2" strokeLinejoin="round" />
-      <circle cx="120" cy="219" r="5" fill={`url(#${u}Gold)`} stroke="#A86F0C" strokeWidth="1" />
-      <circle cx="120" cy="219" r="2.4" fill="#FF6FA8" />
-
-      {/* الوجه */}
-      <path d="M72 100 C 72 134 82 158 100 172 Q 120 186 140 172 C 158 158 168 134 168 100 Z" fill={`url(#${u}Skin)`} stroke="#A0653F" strokeWidth="1.3" strokeLinejoin="round" />
-      <path d="M74 108 Q 120 128 166 108 L 166 100 L 74 100 Z" fill="#D29A70" opacity="0.35" />
-
-      {/* الحاجبان */}
-      <path d="M90 121 Q 100 117 110 119.5" stroke="#5A321A" strokeWidth="1.8" fill="none" strokeLinecap="round" />
-      <path d="M150 121 Q 140 117 130 119.5" stroke="#5A321A" strokeWidth="1.8" fill="none" strokeLinecap="round" />
-
-      {/* العين اليسرى */}
-      <path d="M86 140 C 87 127 107 122 115 133 C 118 146 111 158 101 158 C 92 158 86 150 86 140 Z" fill="#FFFFFF" />
-      <g clipPath={`url(#${u}EyeL)`}>
-        <ellipse cx="101.5" cy="143" rx="12" ry="15" fill={`url(#${u}Iris)`} />
-        <ellipse cx="101.5" cy="142" rx="5.6" ry="7.6" fill="#22110A" />
-        <ellipse cx="102" cy="152" rx="7.5" ry="3.4" fill="#F6CC86" opacity="0.6" />
-        <path d="M86 128 L 118 128 L 118 133 Q 102 126 86 136 Z" fill="#000" opacity="0.12" />
-      </g>
-      <ellipse cx="97.5" cy="137" rx="3.8" ry="4.8" fill="#FFFFFF" />
-      <circle cx="106.5" cy="148" r="1.9" fill="#FFFFFF" />
-      <circle cx="104.5" cy="135.5" r="1.1" fill="#FFFFFF" opacity="0.9" />
-      <path d="M84 140 C 86 124 109 119 117.5 131 L 117 134.5 C 108 125 91 128 86.5 141 Z" fill="#2A160B" />
-      <path d="M85 136 Q 81 133 80 129" stroke="#2A160B" strokeWidth="1.8" strokeLinecap="round" fill="none" />
-      <path d="M87 131 Q 85 127 85.5 124" stroke="#2A160B" strokeWidth="1.6" strokeLinecap="round" fill="none" />
-      <path d="M94 157 Q 102 160 110 155" stroke="#8A5232" strokeWidth="1" fill="none" strokeLinecap="round" />
-
-      {/* العين اليمنى */}
-      <path d="M154 140 C 153 127 133 122 125 133 C 122 146 129 158 139 158 C 148 158 154 150 154 140 Z" fill="#FFFFFF" />
-      <g clipPath={`url(#${u}EyeR)`}>
-        <ellipse cx="138.5" cy="143" rx="12" ry="15" fill={`url(#${u}Iris)`} />
-        <ellipse cx="138.5" cy="142" rx="5.6" ry="7.6" fill="#22110A" />
-        <ellipse cx="138" cy="152" rx="7.5" ry="3.4" fill="#F6CC86" opacity="0.6" />
-        <path d="M154 128 L 122 128 L 122 133 Q 138 126 154 136 Z" fill="#000" opacity="0.12" />
-      </g>
-      <ellipse cx="133.5" cy="137" rx="3.8" ry="4.8" fill="#FFFFFF" />
-      <circle cx="142.5" cy="148" r="1.9" fill="#FFFFFF" />
-      <circle cx="140.5" cy="135.5" r="1.1" fill="#FFFFFF" opacity="0.9" />
-      <path d="M156 140 C 154 124 131 119 122.5 131 L 123 134.5 C 132 125 149 128 153.5 141 Z" fill="#2A160B" />
-      <path d="M155 136 Q 159 133 160 129" stroke="#2A160B" strokeWidth="1.8" strokeLinecap="round" fill="none" />
-      <path d="M153 131 Q 155 127 154.5 124" stroke="#2A160B" strokeWidth="1.6" strokeLinecap="round" fill="none" />
-      <path d="M146 157 Q 138 160 130 155" stroke="#8A5232" strokeWidth="1" fill="none" strokeLinecap="round" />
-
-      {/* الخدود */}
-      <ellipse cx="89" cy="163" rx="11" ry="6" fill={`url(#${u}Blush)`} />
-      <ellipse cx="151" cy="163" rx="11" ry="6" fill={`url(#${u}Blush)`} />
-      {/* الأنف والفم */}
-      <path d="M120 160 Q 121.6 163 119.6 164" stroke="#B57651" strokeWidth="1.2" fill="none" strokeLinecap="round" />
-      <path d="M112.5 169 Q 120 177 127.5 169 Q 120 172 112.5 169 Z" fill="#D9566F" stroke="#A8384F" strokeWidth="1.1" strokeLinejoin="round" />
-
-      {/* الخصلات الجانبية */}
-      <path d="M74 104 C 66 132 64 166 68 192 C 70 206 66 218 60 224 C 72 224 80 212 80 198 C 82 172 80 138 84 112 Z" fill={`url(#${u}HairFront)`} stroke="#4A2A14" strokeWidth="1.3" strokeLinejoin="round" />
-      <path d="M166 104 C 174 132 176 166 172 192 C 170 206 174 218 180 224 C 168 224 160 212 160 198 C 158 172 160 138 156 112 Z" fill={`url(#${u}HairFront)`} stroke="#4A2A14" strokeWidth="1.3" strokeLinejoin="round" />
-
-      {/* الغُرّة المنسدلة */}
-      <path d="M66 118 C 60 68 88 42 120 42 C 152 42 180 68 174 118 C 170 106 166 98 160 92 C 160 104 156 112 150 116 C 150 104 146 96 138 90 C 138 102 132 110 124 114 C 124 102 120 94 112 90 C 108 102 102 110 94 114 C 96 104 96 98 92 92 C 86 102 80 110 72 114 C 72 106 72 100 70 96 C 68 104 66 110 66 118 Z" fill={`url(#${u}HairFront)`} stroke="#4A2A14" strokeWidth="1.4" strokeLinejoin="round" />
-      {/* لمعة الشعر */}
-      <path d="M82 70 Q 120 54 158 70 Q 156 78 150 77 Q 120 66 90 77 Q 84 78 82 70 Z" fill="#DDA673" opacity="0.6" />
-      <path d="M112 92 Q 114 100 112 108 M138 90 Q 142 98 142 106 M92 94 Q 92 100 90 106" stroke="#5E3618" strokeWidth="0.9" fill="none" opacity="0.45" />
-
-      {/* التاج */}
-      <g stroke="#A86F0C" strokeWidth="1.2" strokeLinejoin="round">
-        <path d="M90 58 Q 120 47 150 58 L 148 64 Q 120 54 92 64 Z" fill={`url(#${u}Gold)`} />
-        <path d="M110 53 L 114 40 L 120 26 L 126 40 L 130 53 Q 120 50 110 53 Z" fill={`url(#${u}Gold)`} />
-        <path d="M96 57 L 99 45 L 105 54 Z" fill={`url(#${u}Gold)`} />
-        <path d="M144 57 L 141 45 L 135 54 Z" fill={`url(#${u}Gold)`} />
-      </g>
-      <path d="M120 34 l3.5 6.5 -3.5 6.5 -3.5 -6.5 z" fill="#FF5E9E" stroke="#A8305F" strokeWidth="1" />
-      <circle cx="119" cy="38" r="1" fill="#FFFFFF" />
-      <circle cx="99" cy="45" r="2" fill="#7FE0FF" stroke="#2E8AAE" strokeWidth="0.8" />
-      <circle cx="141" cy="45" r="2" fill="#7FE0FF" stroke="#2E8AAE" strokeWidth="0.8" />
-      <circle cx="120" cy="26" r="2.2" fill="#FFFBE0" stroke="#A86F0C" strokeWidth="0.8" />
-      <circle cx="108" cy="56" r="1.4" fill="#FFFFFF" />
-      <circle cx="132" cy="56" r="1.4" fill="#FFFFFF" />
-      {/* وردة في الشعر */}
-      <g transform="translate(160 84)">
-        <g fill="#FF9EC8" stroke="#C2457F" strokeWidth="1">
-          <circle cx="0" cy="-6" r="5" /><circle cx="5.7" cy="-1.8" r="5" /><circle cx="3.5" cy="4.9" r="5" /><circle cx="-3.5" cy="4.9" r="5" /><circle cx="-5.7" cy="-1.8" r="5" />
-        </g>
-        <circle r="3.4" fill={`url(#${u}Gold)`} stroke="#A86F0C" strokeWidth="0.8" />
-        <circle cx="-1" cy="-1" r="1" fill="#FFFFFF" />
-      </g>
-    </svg>
+    <div className="pp-photo-robot" aria-hidden="true">
+      <span className="ppr-spark s1">✦</span>
+      <span className="ppr-spark s2">✦</span>
+      <NohaFace mood="happy" size={160} />
+    </div>
   );
 }
 

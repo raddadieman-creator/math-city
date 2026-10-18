@@ -4887,3 +4887,31 @@ h2 {
   outline: 4px solid #ffc53d;
   outline-offset: 3px;
 }
+
+/* صورة الجواز: روبوت بشكل نُهى */
+.pp-photo-robot {
+  position: relative;
+  display: grid;
+  place-items: center;
+  aspect-ratio: 6 / 7;
+  background: radial-gradient(circle at 50% 38%, #fff6fb 0%, #fbdcee 58%, #dccfff 100%);
+}
+.pp-photo-robot svg {
+  width: 92%;
+  height: auto;
+}
+.ppr-spark {
+  position: absolute;
+  color: #fff;
+  font-size: 0.9rem;
+  text-shadow: 0 0 4px rgba(255, 255, 255, 0.9);
+}
+.ppr-spark.s1 {
+  top: 8%;
+  right: 10%;
+}
+.ppr-spark.s2 {
+  top: 30%;
+  left: 9%;
+  font-size: 0.7rem;
+}
