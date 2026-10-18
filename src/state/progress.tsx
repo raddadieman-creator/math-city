@@ -93,6 +93,8 @@ interface Ctx {
   setFinalDone: () => void;
   toggleSound: () => void;
   resetAll: () => void;
+  /** طالبة جديدة: يمسح كل التقدم والاسم ويبدأ من البداية (تبقى بيانات المشروع والصوت) */
+  newStudent: () => void;
   districtProgress: (d: DistrictId) => DistrictProgress;
   cityLevel: number;
   weakSkills: (d?: DistrictId) => SkillId[];
@@ -166,6 +168,7 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
       setFinalDone: () => update((p) => ({ ...p, finalDone: true, finalAt: p.finalAt ?? new Date().toISOString() })),
       toggleSound: () => update((p) => ({ ...p, sound: !p.sound })),
       resetAll: () => setProgress((p) => ({ ...fresh(), started: true, issuedAt: new Date().toISOString(), sound: p.sound, info: p.info, playerName: p.playerName })),
+      newStudent: () => setProgress((p) => ({ ...fresh(), sound: p.sound, info: p.info })),
       weakSkills: (d) => {
         const skills = d ? DISTRICTS[d].skills : enabled.flatMap((x) => DISTRICTS[x].skills);
         return skills.filter((s) => {

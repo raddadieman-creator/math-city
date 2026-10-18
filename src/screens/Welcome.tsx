@@ -1,9 +1,11 @@
-import { useId, useState } from 'react';
+import { useId, useRef, useState } from 'react';
 import { navigate } from '../lib/router';
 import { useProgress } from '../state/progress';
 import { projectTagline, branding } from '../config/settings';
 import { NohaFace, NohaRoles } from '../components/Noha';
 import { sfx } from '../lib/sound';
+import { ConfirmDialog } from './Passport';
+import { fmt } from '../lib/numbers';
 
 const INK = '#2A2B5F';
 
@@ -74,11 +76,21 @@ function HeroScene() {
 const FLOATERS = ['+', '٧', '×', '٣', '=', '٥', '−', '٩', '٢', '<'];
 
 export function Welcome() {
-  const { progress, setStarted, setPlayerName } = useProgress();
+  const { progress, setStarted, setPlayerName, newStudent } = useProgress();
   const id = useId();
   const returning = progress.started;
   const name = progress.playerName.trim();
-  const [askName] = useState(!name);
+  const [askNameState, setAskName] = useState(!name);
+  const askName = askNameState || !returning;
+  const [confirmNew, setConfirmNew] = useState(false);
+  const nameRef = useRef<HTMLInputElement>(null);
+  const stamps = Object.values(progress.districts).filter((d) => d?.stamp).length;
+  const startNew = () => {
+    newStudent();
+    setConfirmNew(false);
+    setAskName(true);
+    window.setTimeout(() => nameRef.current?.focus(), 60);
+  };
   return (
     <main className="welcome">
       <div className="sky-deco" aria-hidden="true">
@@ -148,11 +160,24 @@ export function Welcome() {
             </div>
           </div>
           <NohaRoles />
+          {returning && !askName && (
+            <div className="saved-journey">
+              <span className="sj-icon" aria-hidden="true">
+                📘
+              </span>
+              <div>
+                <span className="sj-label">رحلة محفوظة على هذا الجهاز</span>
+                <strong className="sj-name">{name || 'بلا اسم'}</strong>
+                <span className="sj-meta">{`الأختام الذهبية: ${fmt(stamps)}`}</span>
+              </div>
+            </div>
+          )}
           {askName && (
             <div className="field">
               <label htmlFor={id}>اكتبي اسمكِ ليظهر في جوازكِ</label>
               <input
                 id={id}
+                ref={nameRef}
                 type="text"
                 value={progress.playerName}
                 onChange={(e) => setPlayerName(e.target.value)}
@@ -173,6 +198,11 @@ export function Welcome() {
           >
             {returning ? 'تابعي رحلتك' : 'ابدئي رحلتك'}
           </button>
+          {returning && (
+            <button type="button" className="btn btn-new-student" onClick={() => setConfirmNew(true)}>
+              <span aria-hidden="true">✨</span> طالبة جديدة؟ ابدئي من جديد
+            </button>
+          )}
           <p className="welcome-tagline">{projectTagline}.</p>
           <a className="welcome-link" href="#/tour">
             🎤 جولة في مدينتي
@@ -180,6 +210,14 @@ export function Welcome() {
         </div>
       </div>
       <HeroScene />
+      <ConfirmDialog
+        open={confirmNew}
+        title="البدء من جديد لطالبة جديدة"
+        body={`سيُمسح التقدم المحفوظ${name ? ` باسم «${name}»` : ''} (الأختام والمهمات والاسم) من هذا الجهاز، ثم تكتب الطالبة الجديدة اسمها وتبدأ رحلتها من الأول.`}
+        confirmLabel="نعم، ابدئي من جديد"
+        onConfirm={startNew}
+        onClose={() => setConfirmNew(false)}
+      />
     </main>
   );
 }
