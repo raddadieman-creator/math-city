@@ -4915,3 +4915,6 @@ h2 {
   left: 9%;
   font-size: 0.7rem;
 }
+
+.welcome-credit { margin: 6px 0 0; font-size: 0.8rem; font-weight: 600; opacity: 0.75; }
+.welcome-credit b { font-weight: 800; }

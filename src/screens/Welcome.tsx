@@ -207,6 +207,9 @@ export function Welcome() {
           <a className="welcome-link" href="#/tour">
             🎤 جولة في مدينتي
           </a>
+          <p className="welcome-credit">
+            تصميم: <b dir="ltr">Research by Eman</b>
+          </p>
         </div>
       </div>
       <HeroScene />
